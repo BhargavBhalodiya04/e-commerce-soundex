@@ -124,5 +124,41 @@ class OrderManager
         $res = $stmt->fetch();
         return $res ? $res['id'] : 0; // 0 for unknown product
     }
+
+    // --- Admin Methods ---
+
+    // Get all orders (for admin)
+    public function getAllOrders()
+    {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT o.*, u.username, u.email 
+                FROM orders o 
+                LEFT JOIN users u ON o.user_id = u.id 
+                ORDER BY o.created_at DESC
+            ");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+
+    // Update order status
+    public function updateOrderStatus($orderId, $status)
+    {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE orders SET status = ? WHERE id = ?");
+            $result = $stmt->execute([$status, $orderId]);
+
+            if ($result) {
+                return ['success' => true, 'message' => 'Order status updated successfully'];
+            } else {
+                return ['success' => false, 'message' => 'Failed to update order status'];
+            }
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Error: ' . $e->getMessage()];
+        }
+    }
 }
 ?>

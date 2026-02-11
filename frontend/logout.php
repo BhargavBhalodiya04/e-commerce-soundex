@@ -14,7 +14,25 @@ if (isset($_SESSION['session_token'])) {
 // Destroy all session data
 session_destroy();
 
-// Redirect to home page
-header("Location: /Bhavya/frontend/index.php");
+// Use JS to clear localStorage and redirect
+?>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Logging out...</title>
+    <script>
+        localStorage.removeItem('session_token');
+        localStorage.removeItem('user');
+        window.location.href = 'index.php';
+    </script>
+</head>
+
+<body>
+    <p>Please wait while we log you out...</p>
+</body>
+
+</html>
+<?php
 exit();
 ?>

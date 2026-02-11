@@ -44,6 +44,9 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
             <li><a href="../pages/about.php">About</a></li>
             <?php if ($isLoggedIn): ?>
                 <li><a href="../pages/history.php">History</a></li>
+                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                    <li><a href="../admin/index.php" style="color: #f50057; font-weight: bold;">Admin Panel</a></li>
+                <?php endif; ?>
                 <li><a href="#" style="color: #0077cc; font-weight: bold;"><?php echo htmlspecialchars($username); ?></a>
                 </li>
                 <li><a href="../logout.php">Logout</a></li>

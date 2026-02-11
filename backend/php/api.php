@@ -1,8 +1,17 @@
 <?php
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+// Handle CORS for same-origin and credentials
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if (empty($origin) && isset($_SERVER['HTTP_HOST'])) {
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $origin = $protocol . '://' . $_SERVER['HTTP_HOST'];
+}
+header('Access-Control-Allow-Origin: ' . $origin);
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Credentials: true');
+
+session_start();
 
 require_once 'db_config.php';
 require_once 'UserManager.php';
@@ -10,6 +19,8 @@ require_once 'ProductManager.php';
 require_once 'ServiceManager.php';
 require_once 'ApplicationManager.php';
 require_once 'ContactManager.php';
+require_once 'OrderManager.php';
+require_once 'CategoryManager.php';
 
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -22,14 +33,16 @@ $productManager = new ProductManager($pdo);
 $serviceManager = new ServiceManager($pdo);
 $applicationManager = new ApplicationManager($pdo);
 $contactManager = new ContactManager($pdo);
+$orderManager = new OrderManager($pdo);
+$categoryManager = new CategoryManager($pdo);
 
 // Get request data
 $input = json_decode(file_get_contents('php://input'), true);
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
 
 try {
-    switch($action) {
-        
+    switch ($action) {
+
         // User Management
         case 'register':
             $result = $userManager->registerUser(
@@ -43,47 +56,116 @@ try {
             );
             echo json_encode($result);
             break;
-            
+
         case 'login':
             $result = $userManager->loginUser(
-                $input['username'], 
+                $input['username'],
                 $input['password'],
                 $input['guest_session_id'] ?? null
             );
             echo json_encode($result);
             break;
-            
+
         case 'validate_session':
             $result = $userManager->validateSession($input['session_token']);
             echo json_encode(['valid' => $result !== false, 'user' => $result]);
             break;
-            
+
         case 'logout':
             $result = $userManager->logoutUser($input['session_token']);
             echo json_encode(['success' => $result]);
             break;
-            
+
         case 'is_admin':
             $result = $userManager->isAdmin($input['session_token']);
             echo json_encode(['is_admin' => $result]);
             break;
-            
+
         case 'get_purchase_history':
             $result = $userManager->getUserPurchaseHistory($input['user_id']);
             echo json_encode(['success' => true, 'purchase_history' => $result]);
             break;
-            
+
         case 'get_all_users':
             $result = $userManager->getAllUsers($input['session_token']);
             echo json_encode($result);
             break;
-            
+
+        // Category Management
+        case 'get_categories':
+            $result = $categoryManager->getAllCategories();
+            echo json_encode(['success' => true, 'categories' => $result]);
+            break;
+
+        case 'create_category':
+            if (!$userManager->isAdmin($input['session_token'])) {
+                echo json_encode(['success' => false, 'message' => 'Access denied']);
+                break;
+            }
+            $result = $categoryManager->createCategory(
+                $input['name'],
+                $input['description'] ?? '',
+                $input['image_url'] ?? ''
+            );
+            echo json_encode($result);
+            break;
+
+        case 'update_category':
+            if (!$userManager->isAdmin($input['session_token'])) {
+                echo json_encode(['success' => false, 'message' => 'Access denied']);
+                break;
+            }
+            $result = $categoryManager->updateCategory(
+                $input['id'],
+                $input['name'],
+                $input['description'] ?? '',
+                $input['image_url'] ?? ''
+            );
+            echo json_encode($result);
+            break;
+
+        case 'delete_category':
+            if (!$userManager->isAdmin($input['session_token'])) {
+                echo json_encode(['success' => false, 'message' => 'Access denied']);
+                break;
+            }
+            $result = $categoryManager->deleteCategory($input['id']);
+            echo json_encode($result);
+            break;
+
         // Product Management
+        case 'create_product':
+            if (!$userManager->isAdmin($input['session_token'])) {
+                echo json_encode(['success' => false, 'message' => 'Access denied']);
+                break;
+            }
+            $result = $productManager->createProduct($input);
+            echo json_encode($result);
+            break;
+
+        case 'update_product':
+            if (!$userManager->isAdmin($input['session_token'])) {
+                echo json_encode(['success' => false, 'message' => 'Access denied']);
+                break;
+            }
+            $result = $productManager->updateProduct($input['id'], $input);
+            echo json_encode($result);
+            break;
+
+        case 'delete_product':
+            if (!$userManager->isAdmin($input['session_token'])) {
+                echo json_encode(['success' => false, 'message' => 'Access denied']);
+                break;
+            }
+            $result = $productManager->deleteProduct($input['id']);
+            echo json_encode($result);
+            break;
+
         case 'get_products':
             $result = $productManager->getAllProducts();
             echo json_encode(['success' => true, 'products' => $result]);
             break;
-            
+
         case 'add_to_cart':
             $result = $productManager->addToCart(
                 $input['user_id'] ?? null,
@@ -93,7 +175,7 @@ try {
             );
             echo json_encode(['success' => $result]);
             break;
-            
+
         case 'get_cart':
             $result = $productManager->getCartItems(
                 $input['user_id'] ?? null,
@@ -101,7 +183,7 @@ try {
             );
             echo json_encode(['success' => true, 'cart_items' => $result]);
             break;
-            
+
         case 'remove_from_cart':
             $result = $productManager->removeFromCart(
                 $input['cart_id'],
@@ -110,20 +192,20 @@ try {
             );
             echo json_encode(['success' => $result]);
             break;
-            
+
         case 'create_order':
             // Check if user is authenticated before creating order
             if (!isset($input['user_id']) || !$input['user_id']) {
                 echo json_encode(['success' => false, 'message' => 'Authentication required to place an order']);
                 break;
             }
-            
+
             // Get cart items first
             $cartItems = $productManager->getCartItems(
                 $input['user_id'] ?? null,
                 $input['session_id']
             );
-            
+
             $result = $productManager->createOrder(
                 $input['user_id'] ?? null,
                 $cartItems,
@@ -133,18 +215,36 @@ try {
             );
             echo json_encode($result);
             break;
-            
+
+        case 'get_all_orders':
+            if (!$userManager->isAdmin($input['session_token'])) {
+                echo json_encode(['success' => false, 'message' => 'Access denied']);
+                break;
+            }
+            $result = $orderManager->getAllOrders();
+            echo json_encode(['success' => true, 'orders' => $result]);
+            break;
+
+        case 'update_order_status':
+            if (!$userManager->isAdmin($input['session_token'])) {
+                echo json_encode(['success' => false, 'message' => 'Access denied']);
+                break;
+            }
+            $result = $orderManager->updateOrderStatus($input['order_id'], $input['status']);
+            echo json_encode($result);
+            break;
+
         // Service Booking
         case 'book_service':
             $result = $serviceManager->bookService($input);
             echo json_encode($result);
             break;
-            
+
         case 'get_services':
             $result = $serviceManager->getAllServices();
             echo json_encode(['success' => true, 'services' => $result]);
             break;
-            
+
         // Application Management
         case 'submit_application':
             // Handle file uploads
@@ -154,12 +254,12 @@ try {
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
                 }
-                
+
                 foreach ($_FILES as $file) {
                     if ($file['error'] === UPLOAD_ERR_OK) {
                         $fileName = uniqid() . '_' . basename($file['name']);
                         $filePath = $uploadDir . $fileName;
-                        
+
                         if (move_uploaded_file($file['tmp_name'], $filePath)) {
                             $uploadedFiles[] = [
                                 'name' => $file['name'],
@@ -170,16 +270,16 @@ try {
                     }
                 }
             }
-            
+
             $result = $applicationManager->submitApplication($input, $uploadedFiles);
             echo json_encode($result);
             break;
-            
+
         case 'get_applications':
             $result = $applicationManager->getAllApplications($input['status'] ?? null);
             echo json_encode(['success' => true, 'applications' => $result]);
             break;
-            
+
         // Contact Management
         case 'send_message':
             $result = $contactManager->submitMessage(
@@ -190,12 +290,12 @@ try {
             );
             echo json_encode($result);
             break;
-            
+
         case 'get_messages':
             $result = $contactManager->getAllMessages($input['status'] ?? null);
             echo json_encode(['success' => true, 'messages' => $result]);
             break;
-            
+
         case 'submit_faq_feedback':
             $result = $contactManager->submitFAQFeedback(
                 $input['faq_id'],
@@ -205,12 +305,12 @@ try {
             );
             echo json_encode($result);
             break;
-            
+
         default:
             echo json_encode(['success' => false, 'message' => 'Invalid action']);
             break;
     }
-    
-} catch(Exception $e) {
+
+} catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => 'Server error: ' . $e->getMessage()]);
 }

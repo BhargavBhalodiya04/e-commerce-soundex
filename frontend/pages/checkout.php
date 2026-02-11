@@ -256,10 +256,13 @@ if (!isset($_SESSION['user_id'])) {
                 </a></div>
             <li><a href="../pages/home.php">Home</a></li>
             <li><a href="../pages/Gallery.php">Gallery</a></li>
-            <li><a href="../pages/faqs.html">FAQs</a></li>
+            <li><a href="../pages/faqs.php">FAQs</a></li>
             <li><a href="../pages/services.php">Services</a></li>
             <li><a href="../pages/contact us.php">Contact</a></li>
             <li><a href="../pages/about.php">About</a></li>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                <li><a href="../admin/index.php" style="color: #f50057; font-weight: bold;">Admin Panel</a></li>
+            <?php endif; ?>
         </ul>
     </nav>
 

@@ -12,14 +12,16 @@ try {
     $stmt->execute([$username]);
 
     if ($stmt->fetch()) {
-        // Update existing admin password to plain text
+        // Update existing admin password with hash
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $pdo->prepare("UPDATE users SET password = ?, role = 'admin', is_active = TRUE WHERE username = ?");
-        $stmt->execute([$password, $username]);
+        $stmt->execute([$hashedPassword, $username]);
         echo "Existing admin user updated successfully!\n";
     } else {
-        // Create new admin user
+        // Create new admin user with hash
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $pdo->prepare("INSERT INTO users (username, email, password, first_name, last_name, role, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$username, $email, $password, 'Admin', 'User', 'admin', true]);
+        $stmt->execute([$username, $email, $hashedPassword, 'Admin', 'User', 'admin', true]);
         echo "New admin user created successfully!\n";
     }
 

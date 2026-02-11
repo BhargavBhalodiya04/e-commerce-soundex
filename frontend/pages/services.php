@@ -12,29 +12,37 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Our Services – Soundex</title>
   <link rel="stylesheet" href="../CSS/services.css">
   <link rel="stylesheet" href="../CSS/header.css" />
 </head>
+
 <body>
   <!-- Navigation Header -->
   <nav>
     <ul>
-      <div class="logo"><a href="../pages/about.php"><h1>Soun<p>Dex</p></h1></a></div>
+      <div class="logo"><a href="../pages/about.php">
+          <h1>Soun<p>Dex</p>
+          </h1>
+        </a></div>
       <li><a href="../pages/home.php">Home</a></li>
       <li><a href="../pages/Gallery.php">Gallery</a></li>
       <li><a href="../pages/faqs.php">FAQs</a></li>
       <li><a href="../pages/services.php" class="active">Services</a></li>
       <li><a href="../pages/contact us.php">Contact</a></li>
       <li><a href="../pages/about.php">About</a></li>
+      <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+        <li><a href="../admin/index.php" style="color: #f50057; font-weight: bold;">Admin Panel</a></li>
+      <?php endif; ?>
       <?php if ($isLoggedIn): ?>
-      <li><a href="#" style="color: #0077cc; font-weight: bold;"><?php echo htmlspecialchars($username); ?></a></li>
-      <li><a href="../logout.php">Logout</a></li>
+        <li><a href="#" style="color: #0077cc; font-weight: bold;"><?php echo htmlspecialchars($username); ?></a></li>
+        <li><a href="../logout.php">Logout</a></li>
       <?php else: ?>
-      <li><a href="../pages/login.php">Login</a></li>
-      <li><a href="../pages/signup.php">Sign Up</a></li>
+        <li><a href="../pages/login.php">Login</a></li>
+        <li><a href="../pages/signup.php">Sign Up</a></li>
       <?php endif; ?>
     </ul>
   </nav>
@@ -70,4 +78,5 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
 
   <script src="../js/services.js"></script>
 </body>
+
 </html>

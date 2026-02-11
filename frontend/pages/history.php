@@ -239,6 +239,9 @@ $orders = $orderManager->getUserOrders($userId);
             <li><a href="services.php">Services</a></li>
             <li><a href="contact us.php">Contact</a></li>
             <li><a href="about.php">About</a></li>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                <li><a href="../admin/index.php" style="color: #f50057; font-weight: bold;">Admin Panel</a></li>
+            <?php endif; ?>
 
             <li><a href="#" style="color: #0077cc; font-weight: bold;">
                     <?php echo htmlspecialchars($username); ?>

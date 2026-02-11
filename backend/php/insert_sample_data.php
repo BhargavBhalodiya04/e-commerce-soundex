@@ -15,13 +15,13 @@ $products = [
 
 try {
     $stmt = $pdo->prepare("INSERT INTO products (name, description, price, category, image_url, stock_quantity) VALUES (?, ?, ?, ?, ?, ?)");
-    
+
     foreach ($products as $product) {
         $stmt->execute($product);
     }
-    
+
     echo "Sample products inserted successfully!\n";
-    
+
     // Insert sample services
     $services = [
         ['Basic Repair', 'Standard device repair service', 500, 60],
@@ -30,22 +30,29 @@ try {
         ['Software Update', 'Operating system and software updates', 300, 45],
         ['Cleaning Service', 'Professional device cleaning', 150, 20]
     ];
-    
+
     $stmt = $pdo->prepare("INSERT INTO services (name, description, base_price, duration_minutes) VALUES (?, ?, ?, ?)");
-    
+
     foreach ($services as $service) {
         $stmt->execute($service);
     }
-    
+
     echo "Sample services inserted successfully!\n";
-    
+
     // Insert admin user
-    $adminPassword = password_hash('admin123', PASSWORD_DEFAULT);
-    $stmt = $pdo->prepare("INSERT INTO users (username, email, password, first_name, last_name, role, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute(['admin', 'admin@soundex.com', $adminPassword, 'Admin', 'User', 'admin', true]);
-    
-    echo "Admin user created successfully! (Username: admin, Password: admin123)\n";
-    
-} catch(PDOException $e) {
+    // Check if admin exists
+    $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = 'admin'");
+    $checkStmt->execute();
+
+    if ($checkStmt->fetchColumn() == 0) {
+        $adminPassword = password_hash('admin123', PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare("INSERT INTO users (username, email, password, first_name, last_name, role, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute(['admin', 'admin@soundex.com', $adminPassword, 'Admin', 'User', 'admin', true]);
+        echo "Admin user created successfully! (Username: admin, Password: admin123)\n";
+    } else {
+        echo "Admin user already exists. Skipping creation.\n";
+    }
+
+} catch (PDOException $e) {
     echo "Error inserting sample data: " . $e->getMessage() . "\n";
 }

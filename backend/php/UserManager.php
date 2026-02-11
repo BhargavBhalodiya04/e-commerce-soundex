@@ -14,8 +14,8 @@ class UserManager
     public function registerUser($username, $email, $password, $firstName = '', $lastName = '', $phone = '', $address = '')
     {
         try {
-            // Store password in plain text as requested (NOT RECOMMENDED FOR PRODUCTION)
-            $hashedPassword = $password;
+            // Hash the password
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
             $stmt = $this->pdo->prepare("INSERT INTO users (username, email, password, first_name, last_name, phone, address, role) VALUES (?, ?, ?, ?, ?, ?, ?, 'user')");
             $result = $stmt->execute([$username, $email, $hashedPassword, $firstName, $lastName, $phone, $address]);
@@ -38,8 +38,8 @@ class UserManager
             $stmt->execute([$username]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Verify password using plain text comparison
-            if ($user && $password === $user['password']) {
+            // Verify password using password_verify
+            if ($user && password_verify($password, $user['password'])) {
                 // Create session
                 $sessionToken = bin2hex(random_bytes(32));
                 $expiresAt = date('Y-m-d H:i:s', strtotime('+24 hours'));
@@ -90,15 +90,21 @@ class UserManager
         }
     }
 
-    // Check if user is admin
-    public function isAdmin($sessionToken)
+    public function isAdmin($sessionToken = null)
     {
         try {
-            $stmt = $this->pdo->prepare("SELECT u.role FROM user_sessions s JOIN users u ON s.user_id = u.id WHERE s.session_token = ? AND s.expires_at > NOW()");
-            $stmt->execute([$sessionToken]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($sessionToken) {
+                $stmt = $this->pdo->prepare("SELECT u.role FROM user_sessions s JOIN users u ON s.user_id = u.id WHERE s.session_token = ? AND s.expires_at > NOW()");
+                $stmt->execute([$sessionToken]);
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            return $user && $user['role'] === 'admin';
+                if ($user && $user['role'] === 'admin') {
+                    return true;
+                }
+            }
+
+            // Fallback to PHP session
+            return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
         } catch (PDOException $e) {
             return false;
         }
