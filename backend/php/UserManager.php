@@ -137,7 +137,7 @@ class UserManager
         }
 
         try {
-            $stmt = $this->pdo->prepare("SELECT id, username, email, first_name, last_name, role, created_at, is_active FROM users ORDER BY created_at DESC");
+            $stmt = $this->pdo->prepare("SELECT id, username, email, first_name, last_name, role, created_at, is_active FROM users ORDER BY id ASC");
             $stmt->execute();
             return ['success' => true, 'users' => $stmt->fetchAll(PDO::FETCH_ASSOC)];
         } catch (PDOException $e) {

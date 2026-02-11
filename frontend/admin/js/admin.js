@@ -412,9 +412,11 @@ function loadUsers() {
                 tbody.innerHTML = '';
                 data.users.forEach(u => {
                     const tr = document.createElement('tr');
+                    const fullName = `${u.first_name || ''} ${u.last_name || ''}`.trim();
+                    const displayName = fullName || u.username;
                     tr.innerHTML = `
                     <td>${u.id}</td>
-                    <td>${u.first_name} ${u.last_name}</td>
+                    <td>${displayName}</td>
                     <td>${u.email}</td>
                     <td>${u.role}</td>
                     <td>${new Date(u.created_at).toLocaleDateString()}</td>
