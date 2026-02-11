@@ -410,12 +410,12 @@ function loadUsers() {
             if (data.success) {
                 const tbody = document.querySelector('#usersTable tbody');
                 tbody.innerHTML = '';
-                data.users.forEach(u => {
+                data.users.forEach((u, index) => {
                     const tr = document.createElement('tr');
                     const fullName = `${u.first_name || ''} ${u.last_name || ''}`.trim();
                     const displayName = fullName || u.username;
                     tr.innerHTML = `
-                    <td>${u.id}</td>
+                    <td>${index + 1}</td>
                     <td>${displayName}</td>
                     <td>${u.email}</td>
                     <td>${u.role}</td>
