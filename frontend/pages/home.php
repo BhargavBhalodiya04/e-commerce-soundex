@@ -23,8 +23,13 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Soundex Audio Solutions</title>
-    <link rel="stylesheet" href="../css/home.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="../css/header.css" />
+    <link rel="stylesheet" href="../css/home.css">
 </head>
 
 <body>
@@ -54,28 +59,40 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
                 <li><a href="../pages/login.php">Login</a></li>
                 <li><a href="../pages/signup.php">Sign Up</a></li>
             <?php endif; ?>
+            <li><a href="../pages/checkout.php" class="cart-icon" id="cartIcon">
+                    🛒
+                    <span class="cart-count" id="cartCount">0</span>
+                </a></li>
         </ul>
     </nav>
 
     <main class="main-content">
+        <!-- Hero Section -->
         <section class="hero-section">
-            <h1>Welcome to Soundex</h1>
-            <p>Your premier destination for audio solutions</p>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1>Experience Sound Like Never Before</h1>
+                <p>Premium audio solutions for the audiophile in you.</p>
+                <a href="../pages/buy.php" class="cta-button">Shop Now</a>
+            </div>
         </section>
 
-        <section class="new-speakers">
-            <h2>Shop Our Latest Audio Products</h2>
+        <!-- Featured Products Section -->
+        <section class="new-speakers section-padding">
+            <h2 class="section-title">Latest Arrivals</h2>
             <?php if (!empty($products)): ?>
                 <div class="products-grid">
                     <?php foreach ($products as $product): ?>
                         <a href="../pages/buy.php" class="product-card">
-                            <div class="product">
+                            <div class="product-image-wrapper">
                                 <img src="<?php echo htmlspecialchars($product['image_url'] ?? '/Bhavya/assets/images/product_gallery/1.jpg'); ?>"
                                     alt="<?php echo htmlspecialchars($product['name']); ?>"
                                     onerror="this.onerror=null; this.src='/Bhavya/assets/images/product_gallery/1.jpg';">
-                                <h2><?php echo htmlspecialchars($product['name']); ?></h2>
-                                <p><?php echo htmlspecialchars(substr($product['description'] ?? '', 0, 100)); ?>...</p>
+                            </div>
+                            <div class="product-info">
+                                <h3><?php echo htmlspecialchars($product['name']); ?></h3>
                                 <p class="price">₹<?php echo number_format($product['price'] ?? 0); ?></p>
+                                <span class="view-btn">View Details</span>
                             </div>
                         </a>
                     <?php endforeach; ?>
@@ -84,50 +101,110 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
                 <!-- Fallback content if no products from DB -->
                 <div class="products-grid">
                     <a href="../pages/buy.php" class="product-card">
-                        <div class="product">
+                        <div class="product-image-wrapper">
                             <img src="/Bhavya/assets/images/product_gallery/1.jpg" alt="Premium Bluetooth Speaker"
                                 onerror="this.onerror=null; this.src='/Bhavya/assets/images/product_gallery/1.jpg';">
-                            <h2>Bluetooth Speakers</h2>
-                            <p>High-quality wireless audio solutions</p>
+                        </div>
+                        <div class="product-info">
+                            <h3>Bluetooth Speakers</h3>
+                            <p class="description">High-quality wireless audio.</p>
+                            <span class="view-btn">View Collection</span>
                         </div>
                     </a>
                     <a href="../pages/portable speaker.php" class="product-card">
-                        <div class="product">
+                        <div class="product-image-wrapper">
                             <img src="/Bhavya/assets/images/product_gallery/2.jpg" alt="Portable Speaker"
                                 onerror="this.onerror=null; this.src='/Bhavya/assets/images/product_gallery/2.jpg';">
-                            <h2>Portable Speakers</h2>
-                            <p>Take your music anywhere with our portable speakers</p>
+                        </div>
+                        <div class="product-info">
+                            <h3>Portable Speakers</h3>
+                            <p class="description">Music on the go.</p>
+                            <span class="view-btn">View Collection</span>
                         </div>
                     </a>
                 </div>
             <?php endif; ?>
         </section>
 
-        <section class="services-section">
-            <h2>Our Services</h2>
+        <!-- Services Section -->
+        <section class="services-section section-padding">
+            <h2 class="section-title">Our Services</h2>
             <div class="services-grid">
                 <div class="service-card">
-                    <h3>Repair Services</h3>
-                    <p>Professional repair for all audio devices</p>
-                    <a href="../pages/repair.php" class="service-btn">Live Repair</a>
+                    <div class="icon">🔧</div>
+                    <h3>Expert Repair</h3>
+                    <p>Restore your audio devices to their former glory with our professional repair services.</p>
+                    <a href="../pages/repair.php" class="service-link">Learn More &rarr;</a>
                 </div>
                 <div class="service-card">
-                    <h3>Sell Your Devices</h3>
-                    <p>Trade in your old audio equipment for great value</p>
-                    <a href="../pages/sell.php" class="service-btn">Sell Now</a>
+                    <div class="icon">💰</div>
+                    <h3>Sell Your Gear</h3>
+                    <p>Upgrade your setup by trading in your old audio equipment for competitive prices.</p>
+                    <a href="../pages/sell.php" class="service-link">Get a Quote &rarr;</a>
                 </div>
             </div>
         </section>
 
+        <!-- CTA/Internship Section -->
         <section class="internship-section">
-            <h2>Join Our Team</h2>
-            <div class="internship-content">
-                <p>Gain hands-on experience in audio repair and technology</p>
-                <a href="../pages/internship2.php" class="internship-btn">Apply for Free Internship</a>
+            <div class="cta-content">
+                <h2>Join The Audio Revolution</h2>
+                <p>Passionate about sound technology? Apply for our hands-on internship program.</p>
+                <a href="../pages/internship2.php" class="internship-btn">Apply Now</a>
             </div>
         </section>
     </main>
 
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <h2>Soun<span>Dex</span></h2>
+                <p>Your one-stop shop for premium audio.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="../pages/home.php">Home</a></li>
+                    <li><a href="../pages/buy.php">Shop</a></li>
+                    <li><a href="../pages/services.php">Services</a></li>
+                    <li><a href="../pages/contact us.php">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">FB</a>
+                    <a href="#" class="social-icon">IG</a>
+                    <a href="#" class="social-icon">TW</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <?php echo date('Y'); ?> Soundex Audio Solutions. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Copy Cart Logic from other pages if necessary or ensure header.js is included if it exists
+        // Ideally this should be in a common js file
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            const cartCountElement = document.getElementById('cartCount');
+            const cartIconElement = document.getElementById('cartIcon');
+
+            if (cartCountElement) {
+                cartCountElement.textContent = totalItems;
+                if (totalItems > 0) {
+                    cartIconElement.classList.remove('empty');
+                } else {
+                    cartIconElement.classList.add('empty');
+                }
+            }
+        }
+        document.addEventListener('DOMContentLoaded', updateCartCount);
+    </script>
 </body>
 
 </html>

@@ -4,7 +4,7 @@ require_once '../../backend/php/db_config.php';
 require_once '../../backend/php/ProductManager.php';
 require_once '../../backend/php/UserManager.php';
 
-// Initialize ProductManager and UserManager
+// Initialize ProductManager
 $productManager = new ProductManager($pdo);
 $userManager = new UserManager($pdo);
 
@@ -14,13 +14,13 @@ $productId = $_GET['id'] ?? 1;
 // Get specific product
 $product = $productManager->getProductById($productId);
 
-// If no specific product was found, use a default product
+// If no specific product was found, use a default product or redirect
 if (!$product) {
-  $products = $productManager->getAllProducts();
-  $product = !empty($products) ? $products[0] : null;
-
-  if (!$product) {
-    // Default product if no products exist in the database
+    // Optionally redirect to home or show error
+    // header("Location: home.php");
+    // exit;
+    
+    // Using default data for display purposes if DB fails or ID invalid
     $product = [
       'id' => 1,
       'name' => 'Wireless Bluetooth Headphones',
@@ -34,7 +34,6 @@ if (!$product) {
         'Lightweight & foldable design'
       ]
     ];
-  }
 }
 
 // Check if user is logged in
@@ -48,215 +47,14 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?php echo htmlspecialchars($product['name'] ?? 'Product Detail'); ?> - Soundex</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    body {
-      background: beige;
-      padding: 0;
-      margin: 0;
-    }
-
-    /* Navigation Header */
-    nav {
-      background-color: #fff;
-      overflow: hidden;
-      position: fixed;
-      display: flex;
-      z-index: 2;
-      width: 100%;
-      top: 0;
-    }
-
-    nav ul {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: right;
-    }
-
-    nav ul li a {
-      color: black;
-      padding: 14px 30px;
-      text-align: center;
-      text-transform: uppercase;
-      text-decoration: none;
-      font-weight: bolder;
-      font-size: 90%;
-      position: relative;
-      transition: all 0.3s ease;
-    }
-
-    nav ul li a:hover {
-      color: #3498db;
-    }
-
-    li a::before {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 50%;
-      width: 0;
-      height: 7px;
-      background-color: steelblue;
-      transition: all 0.5s;
-      transform: translateX(-50%);
-    }
-
-    li a:hover::before {
-      width: 70%;
-    }
-
-    .logo h1 {
-      color: black;
-      display: flex;
-      padding: 20px 40px;
-      text-transform: uppercase;
-      font-family: 'Times New Roman', Times, serif;
-      font-size: 30px;
-    }
-
-    .logo a {
-      text-decoration: none;
-    }
-
-    .logo p {
-      color: cornflowerblue;
-      font-weight: 600;
-      font-family: 'Times New Roman', Times, serif;
-    }
-
-    .container {
-      display: block;
-      flex-wrap: wrap;
-      background: #fff;
-      padding: 140px 30px 30px 30px;
-      /* Added top padding for fixed header */
-      border-radius: 10px;
-      max-width: auto;
-      margin: auto;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      min-height: calc(100vh - 160px);
-    }
-
-    .container {
-      display: block;
-      flex-wrap: wrap;
-      background: #fff;
-      padding: 0 0 0 30px;
-      border-radius: 10px;
-      max-width: auto;
-      margin: auto;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .product-images {
-      flex: 1;
-      min-width: 300px;
-      text-align: center;
-    }
-
-    .main-img {
-      width: 100%;
-      max-width: 400px;
-
-
-      border-radius: 10px;
-    }
-
-    .thumbnail {
-      margin-top: 10px;
-    }
-
-    .thumbnail img {
-      width: 80px;
-      margin: 5px;
-      border: 2px solid #ddd;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .thumbnail img:hover {
-      border-color: #ff9900;
-    }
-
-    .product-details {
-      flex: 1;
-      min-width: 300px;
-      padding: 20px;
-    }
-
-    .product-details h1 {
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
-    .price {
-      color: #b12704;
-      font-size: 24px;
-      margin-bottom: 15px;
-      font-weight: bold;
-    }
-
-    .description {
-      color: #333;
-      margin-bottom: 20px;
-      line-height: 1.6;
-    }
-
-    .buttons {
-      margin-bottom: 20px;
-    }
-
-    button {
-      padding: 12px 25px;
-      border: none;
-      border-radius: 5px;
-      margin-right: 10px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-
-    .cart {
-      background: #ffa41c;
-      color: #ffffff;
-    }
-
-    .buy {
-      background: #ffa41c;
-      color: white;
-
-    }
-
-    button:hover {
-      background-color: #058509;
-
-    }
-
-    .features {
-      list-style: none;
-      margin-top: 20px;
-    }
-
-    .features li {
-      margin-bottom: 30px;
-      color: #555;
-      font-size: 120%;
-
-
-    }
-  </style>
+  <link rel="stylesheet" href="../css/header.css">
+  <link rel="stylesheet" href="../css/product_detail.css">
 </head>
 
 <body>
@@ -283,77 +81,99 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
         <li><a href="../pages/login.php">Login</a></li>
         <li><a href="../pages/signup.php">Sign Up</a></li>
       <?php endif; ?>
+        <li><a href="../pages/checkout.php" class="cart-icon" id="cartIcon">
+            🛒
+            <span class="cart-count" id="cartCount">0</span>
+        </a></li>
     </ul>
   </nav>
 
-  <div class="container">
-    <!-- Product Images -->
-    <div class="product-images">
-      <img src="<?php echo htmlspecialchars($product['image_url'] ?? '../assets/images/product_gallery/1.jpg'); ?>"
-        alt="<?php echo htmlspecialchars($product['name'] ?? 'Product'); ?>" class="main-img"
-        onerror="this.onerror=null; this.src='../assets/images/product_gallery/1.jpg';">
-      <div class="thumbnail">
-        <img src="<?php echo htmlspecialchars($product['image_url'] ?? '../assets/images/product_gallery/1.jpg'); ?>"
-          alt="thumb1" onclick="changeImage(this.src)"
-          onerror="this.onerror=null; this.src='../assets/images/product_gallery/1.jpg';">
-        <img src="<?php echo htmlspecialchars($product['image_url'] ?? '../assets/images/product_gallery/1.jpg'); ?>"
-          alt="thumb2" onclick="changeImage(this.src)"
-          onerror="this.onerror=null; this.src='../assets/images/product_gallery/1.jpg';">
-        <img src="<?php echo htmlspecialchars($product['image_url'] ?? '../assets/images/product_gallery/1.jpg'); ?>"
-          alt="thumb3" onclick="changeImage(this.src)"
-          onerror="this.onerror=null; this.src='../assets/images/product_gallery/1.jpg';">
+  <main class="main-content">
+    <div class="product-detail-container">
+      <!-- Left Column: Product Images -->
+      <div class="product-gallery">
+        <div class="main-image-container">
+            <img src="<?php echo htmlspecialchars($product['image_url'] ?? '../assets/images/product_gallery/1.jpg'); ?>"
+                alt="<?php echo htmlspecialchars($product['name'] ?? 'Product'); ?>" class="main-img"
+                id="mainImage"
+                onerror="this.onerror=null; this.src='../assets/images/product_gallery/1.jpg';">
+        </div>
+        <div class="thumbnails">
+          <!-- Generate thumbnails (simulated for now, can be real grid if available) -->
+            <img src="<?php echo htmlspecialchars($product['image_url'] ?? '../assets/images/product_gallery/1.jpg'); ?>"
+                class="active" onclick="changeImage(this)"
+                onerror="this.onerror=null; this.src='../assets/images/product_gallery/1.jpg';">
+            <!-- Placeholders for other angles if they ever exist -->
+            <img src="../assets/images/product_gallery/2.jpg" onclick="changeImage(this)" 
+                onerror="this.onerror=null; this.src='../assets/images/product_gallery/1.jpg';">
+            <img src="../assets/images/product_gallery/3.jpg" onclick="changeImage(this)" 
+                onerror="this.onerror=null; this.src='../assets/images/product_gallery/1.jpg';">
+        </div>
+      </div>
+
+      <!-- Right Column: Product Details -->
+      <div class="product-info">
+        <h1 class="product-title"><?php echo htmlspecialchars($product['name'] ?? 'Product Name'); ?></h1>
+        <div class="product-price">₹<?php echo number_format($product['price'] ?? 0); ?></div>
+        
+        <div class="description-section">
+            <span class="sections-title">Description</span>
+            <p class="product-description">
+            <?php echo htmlspecialchars($product['description'] ?? 'No description available for this product.'); ?>
+            </p>
+        </div>
+
+        <div class="features-section">
+            <span class="sections-title">Key Features</span>
+            <ul class="features-list">
+                <?php if (!empty($product['features'])): ?>
+                <?php foreach ($product['features'] as $feature): ?>
+                    <li><?php echo htmlspecialchars($feature); ?></li>
+                <?php endforeach; ?>
+                <?php else: ?>
+                <li>Premium Sound Quality</li>
+                <li>Durable Build Material</li>
+                <li>1 Year Warranty</li>
+                <li>Free Shipping</li>
+                <?php endif; ?>
+            </ul>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-cart"
+            onclick="addToCart('<?php echo addslashes(htmlspecialchars($product['name'] ?? 'Product')); ?>', <?php echo $product['price'] ?? 0; ?>)">
+            Add to Cart
+          </button>
+          <button class="btn btn-buy"
+            onclick="buyNow('<?php echo addslashes(htmlspecialchars($product['name'] ?? 'Product')); ?>', <?php echo $product['price'] ?? 0; ?>)">
+            Buy Now
+          </button>
+        </div>
       </div>
     </div>
+  </main>
 
-    <!-- Product Details -->
-    <div class="product-details">
-      <h1><?php echo htmlspecialchars($product['name'] ?? 'Wireless Bluetooth Headphones'); ?></h1>
-      <p class="price">₹<?php echo number_format($product['price'] ?? 0); ?></p>
-      <p class="description">
-        <?php echo htmlspecialchars($product['description'] ?? 'Experience crystal-clear sound and long-lasting comfort with these wireless Bluetooth headphones. Perfect for music, calls, and gaming.'); ?>
-      </p>
-
-      <ul class="features">
-        <?php if (!empty($product['features'])): ?>
-          <?php foreach ($product['features'] as $feature): ?>
-            <li>✅ <?php echo htmlspecialchars($feature); ?></li>
-          <?php endforeach; ?>
-        <?php else: ?>
-          <li>✅ Bluetooth 5.0 connectivity</li>
-          <li>✅ 20 hours battery life</li>
-          <li>✅ Noise-cancelling microphone</li>
-          <li>✅ Lightweight & foldable design</li>
-        <?php endif; ?>
-      </ul>
-
-      <div class="buttons">
-        <button class="cart"
-          onclick="addToCart('<?php echo addslashes(htmlspecialchars($product['name'] ?? 'Product')); ?>', <?php echo $product['price'] ?? 0; ?>)">Add
-          to Cart</button>
-        <button class="buy"
-          onclick="addToCartAndCheckout('<?php echo addslashes(htmlspecialchars($product['name'] ?? 'Product')); ?>', <?php echo $product['price'] ?? 0; ?>)">Buy
-          Now</button>
-      </div>
-    </div>
-  </div>
+  <div id="toast" class="toast">Item added to cart!</div>
 
   <script>
-    function changeImage(src) {
-      document.querySelector('.main-img').src = src;
+    // Image Gallery Logic
+    function changeImage(thumbnail) {
+        // Update main image
+        document.getElementById('mainImage').src = thumbnail.src;
+        
+        // Update active class
+        document.querySelectorAll('.thumbnails img').forEach(img => img.classList.remove('active'));
+        thumbnail.classList.add('active');
     }
 
+    // Cart Logic
     function addToCart(productName, price) {
-      // Get existing cart or create new one
       let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-      // Check if product already exists in cart
       const existingItemIndex = cart.findIndex(item => item.name === productName);
 
       if (existingItemIndex > -1) {
-        // Increase quantity if item already exists
         cart[existingItemIndex].quantity += 1;
       } else {
-        // Add new item to cart
         cart.push({
           name: productName,
           price: price,
@@ -361,52 +181,53 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
         });
       }
 
-      // Save cart to localStorage
       localStorage.setItem('cart', JSON.stringify(cart));
-
-      // Show confirmation message
-      alert(`${productName} added to cart!`);
+      updateCartCount();
+      showToast(`${productName} added to cart!`);
     }
 
-    // Enhanced function to handle adding to cart and then proceeding to checkout
-    function addToCartAndCheckout(productName, price) {
-      // Check if user is logged in
+    // Buy Now Logic
+    function buyNow(productName, price) {
       <?php if (!$isLoggedIn): ?>
-        // Show login/signup prompt
         if (confirm('You need to login or signup to proceed with checkout. Would you like to login now?')) {
           window.location.href = 'login.php?redirect=' + encodeURIComponent(window.location.pathname);
         }
         return;
       <?php else: ?>
-        // Add to cart and redirect to checkout
+        // Add to cart first (standard e-commerce behavior usually adds to cart then goes to checkout)
+        // Or specific buy now logic. Let's add to cart and go.
         addToCart(productName, price);
         window.location.href = 'checkout.php';
       <?php endif; ?>
     }
 
-    function buyNow(productName, price) {
-      // Check if user is logged in
-      <?php if (!$isLoggedIn): ?>
-        // Show login/signup prompt
-        if (confirm('You need to login or signup to proceed with checkout. Would you like to login now?')) {
-          window.location.href = 'login.php?redirect=' + encodeURIComponent(window.location.pathname);
+    // Update Header Cart Count
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+        const cartCountElement = document.getElementById('cartCount');
+        const cartIconElement = document.getElementById('cartIcon');
+
+        if (cartCountElement) {
+            cartCountElement.textContent = totalItems;
+            if (totalItems > 0) {
+                cartIconElement.classList.remove('empty');
+            } else {
+                cartIconElement.classList.add('empty');
+            }
         }
-        return;
-      <?php else: ?>
-        // Clear existing cart and add only this product
-        const cart = [{
-          name: productName,
-          price: price,
-          quantity: 1
-        }];
-
-        // Save to localStorage
-        localStorage.setItem('cart', JSON.stringify(cart));
-
-        // Redirect to checkout
-        window.location.href = 'checkout.php';
-      <?php endif; ?>
     }
+
+    // Toast Notification
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = "toast show";
+        setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', updateCartCount);
   </script>
 </body>
 
