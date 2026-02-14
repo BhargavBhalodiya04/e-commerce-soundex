@@ -111,7 +111,7 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
                             <span class="view-btn">View Collection</span>
                         </div>
                     </a>
-                    <a href="../pages/portable speaker.php" class="product-card">
+                    <a href="../pages/Gallery.php" class="product-card">
                         <div class="product-image-wrapper">
                             <img src="/Bhavya/assets/images/product_gallery/2.jpg" alt="Portable Speaker"
                                 onerror="this.onerror=null; this.src='/Bhavya/assets/images/product_gallery/2.jpg';">
@@ -150,7 +150,7 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
             <div class="cta-content">
                 <h2>Join The Audio Revolution</h2>
                 <p>Passionate about sound technology? Apply for our hands-on internship program.</p>
-                <a href="../pages/internship2.php" class="internship-btn">Apply Now</a>
+                <a href="../pages/INTERNSHIP.php" class="internship-btn">Apply Now</a>
             </div>
         </section>
     </main>
