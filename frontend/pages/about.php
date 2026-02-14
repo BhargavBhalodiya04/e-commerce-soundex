@@ -16,298 +16,15 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About Us</title>
+  <title>About Us - Soundex Audio Solutions</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="../css/header.css" />
-  <style>
-    /* Global Styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-
-      background-color: beige;
-      color: #333;
-    }
-
-    nav {
-      background-color: #fff;
-      overflow: hidden;
-      position: fixed;
-      display: flex;
-      z-index: 2;
-      width: 100%;
-
-    }
-
-    nav ul {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: right;
-
-    }
-
-
-    nav ul li a {
-
-      color: black;
-      padding: 14px 30px;
-      text-align: center;
-      text-transform: uppercase;
-      text-decoration: none;
-      font-weight: bolder;
-      font-size: 90%;
-
-
-
-    }
-
-    /*nav span{
-    position: absolute;
-    top:0;
-    left: 0;
-    width:100px;
-    height:100%;
-    justify-items: auto;
-    background: linear-gradient(45deg,red,blue);
-    border-radius: 10px;
-    transition: 0.5s;
-  }*/
-
-    li a::before {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      width: 0;
-      height: 7px;
-      background-color: steelblue;
-      transition: all 0.5s;
-    }
-
-    li a:hover::before {
-      width: 90px;
-    }
-
-    .logo h1 {
-      color: black;
-      display: flex;
-      padding: 20px 40px;
-      text-transform: uppercase;
-      font-family: 'Times New Roman', Times, serif;
-      font-size: 30px;
-    }
-
-    @media screen and (max-width: 1024px) and (min-width: 769px) {
-      .logo h1 {
-        padding: 15px 30px;
-        font-size: 26px;
-      }
-    }
-
-    .logo a {
-      text-decoration: none;
-    }
-
-
-    .logo p {
-      color: cornflowerblue;
-      font-weight: 600;
-      font-family: 'Times New Roman', Times, serif;
-
-    }
-
-    /*.navbar{
-    background-color: white;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    
-    
-    position: fixed;
-    width: 100%;
-    z-index: 2;
-  }
-  .navdiv{
-    display: flex;
-    align-items: center;
-    justify-content:space-between ;
-  }
-  .logo{
-    font-size: 30px;
-    color:#fff;
-    font-weight: 600;
-  }
-  li{
-    list-style: none;
-    display:inline-block;
-
-  }
-  li a{
-    color:black;
-    font-size:20px;
-    font-weight: bold;
-    margin-right: 20px;
-    text-decoration:none;
-  }*/
-    @media screen and (max-width: 768px) and (min-width: 601px) {
-      nav {
-        flex-wrap: wrap;
-      }
-
-      nav ul {
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      nav ul li a {
-        padding: 10px 15px;
-        font-size: 80%;
-      }
-
-      .logo h1 {
-        padding: 15px 20px;
-        font-size: 24px;
-      }
-    }
-
-    @media (max-width:600px) {
-      nav ul {
-        flex-direction: row;
-      }
-
-      nav ul li a {
-        padding: 8px;
-      }
-
-    }
-
-
-    /* Header Styles */
-
-
-    /* About Us Section */
-    .about-us {
-      background-color: beige;
-      padding: 40px 0;
-    }
-
-    .about-us .container {
-
-      width: 80%;
-      margin: 0 auto;
-    }
-
-    .about-us h2 {
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-
-    .about-us p {
-      font-size: 1.1em;
-      line-height: 1.8;
-      color: #666;
-    }
-
-    /* Team Section */
-    .team {
-      background-color: beige;
-      padding: 40px 0;
-    }
-
-    .team .container {
-      width: 80%;
-      margin: 0 auto;
-    }
-
-    .team h2 {
-      font-size: 2em;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .team-members {
-      background-color: beige;
-      display: flex;
-      justify-content: space-around;
-      margin-right: 70px;
-      margin-top: 20px;
-    }
-
-    .member {
-      background-color: beige;
-      text-align: center;
-      max-width: 250px;
-    }
-
-    .member img {
-      width: 100%;
-      border-radius: 50%;
-      margin-bottom: 15px;
-    }
-
-    .member h3 {
-      font-size: 1.5em;
-      margin-bottom: 5px;
-    }
-
-    .member p {
-      font-size: 1.1em;
-      color: #666;
-    }
-
-    /* Contact Section */
-    .contact {
-      background-color: beige;
-
-      padding: 40px 0;
-    }
-
-    .contact .container {
-      background-color: beige;
-      width: 80%;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .contact h2 {
-      background-color: beige;
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-
-    .contact p {
-      background-color: beige;
-      font-size: 1.1em;
-      margin: 10px 0;
-    }
-
-    .contact a {
-      background-color: beige;
-      color: #333;
-      text-decoration: none;
-    }
-
-    .contact a:hover {
-      text-decoration: underline;
-    }
-
-    /* Footer Styles */
-    footer {
-      background-color: beige;
-      color: rgb(17, 0, 0);
-      padding: 10px 0;
-      text-align: center;
-    }
-
-    footer p {
-      font-size: 1em;
-    }
-  </style>
+  <link rel="stylesheet" href="../css/shared.css">
+  <link rel="stylesheet" href="../css/about.css">
 </head>
 
 <body>
@@ -334,54 +51,106 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
         <li><a href="../pages/login.php">Login</a></li>
         <li><a href="../pages/signup.php">Sign Up</a></li>
       <?php endif; ?>
+      <li><a href="../pages/checkout.php" class="cart-icon" id="cartIcon">
+          🛒
+          <span class="cart-count" id="cartCount">0</span>
+        </a></li>
     </ul>
   </nav>
 
-  <section class="about-us">
-    <div class="container">
-      <h2>About Our Company</h2>
-      <p>Soundex contributes towards selling, repairing and exchanging speakers and also provides a way to learn about
-        repairing speakers. </p>
-    </div>
-  </section>
+  <main class="main-content">
+    <section class="about-us section-padding">
+      <div class="container">
+        <h2>About Our Company</h2>
+        <p>Soundex contributes towards selling, repairing and exchanging speakers and also provides a way to learn about
+          repairing speakers. We are passionate about high-quality audio and sustainable technology.</p>
+      </div>
+    </section>
 
-  <section class="team">
-    <div class="container">
-      <h2>Meet Our Team</h2>
-      <div class="team-members">
-        <div class="member">
-
-          <h3>Amrutiya Bhavy</h3>
-          <p>Team Leader</p>
+    <section class="team section-padding">
+      <div class="container">
+        <h2>Meet Our Team</h2>
+        <div class="team-members">
+          <div class="member">
+            <img src="../../assets/images/team/member1.jpg" alt="Amrutiya Bhavy"
+              onerror="this.src='https://via.placeholder.com/150?text=AB'">
+            <h3>Amrutiya Bhavy</h3>
+            <p>Team Leader</p>
+          </div>
+          <div class="member">
+            <img src="../../assets/images/team/member2.jpg" alt="Babriya Dhruv"
+              onerror="this.src='https://via.placeholder.com/150?text=BD'">
+            <h3>Babriya Dhruv</h3>
+            <p>Team Member</p>
+          </div>
+          <div class="member">
+            <img src="../../assets/images/team/member3.jpg" alt="Bhatt Parv"
+              onerror="this.src='https://via.placeholder.com/150?text=BP'">
+            <h3>Bhatt Parv</h3>
+            <p>Team Member</p>
+          </div>
         </div>
-        <div class="member">
+      </div>
+    </section>
 
-          <h3>Babriya Dhruv</h3>
-          <p>Team member1</p>
-        </div>
-        <div class="member">
+    <section class="contact-details section-padding">
+      <div class="container">
+        <h2>Contact Info</h2>
+        <p>If you have any questions, feel free to reach out to us!</p>
+        <p>Email: <a href="mailto:Soundex6@gmail.com">Soundex6@gmail.com</a></p>
+        <p>Phone: +91 1234567890</p>
+      </div>
+    </section>
+  </main>
 
-          <h3>Bhatt Parv</h3>
-          <p>Team member2</p>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-logo">
+        <h2>Soun<span>Dex</span></h2>
+        <p>Your one-stop shop for premium audio.</p>
+      </div>
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="../pages/home.php">Home</a></li>
+          <li><a href="../pages/buy.php">Shop</a></li>
+          <li><a href="../pages/services.php">Services</a></li>
+          <li><a href="../pages/contact us.php">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-social">
+        <h3>Follow Us</h3>
+        <div class="social-icons">
+          <a href="#" class="social-icon">FB</a>
+          <a href="#" class="social-icon">IG</a>
+          <a href="#" class="social-icon">TW</a>
         </div>
       </div>
     </div>
-  </section>
-
-  <section class="contact">
-    <div class="container">
-      <h2>Contact Us</h2>
-      <p>If you have any questions, feel free to reach out to us!</p>
-      <p>Email: <a href="mailto:Soundex6@gmail.com.com">Soundex6@gmail.com</a></p>
-      <p>Phone: +91 1234567890</p>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 Our Company. All rights reserved.</p>
+    <div class="footer-bottom">
+      <p>&copy; <?php echo date('Y'); ?> Soundex Audio Solutions. All rights reserved.</p>
     </div>
   </footer>
+
+  <script>
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+      const cartCountElement = document.getElementById('cartCount');
+      const cartIconElement = document.getElementById('cartIcon');
+
+      if (cartCountElement) {
+        cartCountElement.textContent = totalItems;
+        if (totalItems > 0) {
+          cartIconElement.classList.remove('empty');
+        } else {
+          cartIconElement.classList.add('empty');
+        }
+      }
+    }
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+  </script>
 </body>
 
 </html>

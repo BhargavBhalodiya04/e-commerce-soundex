@@ -1,13 +1,8 @@
 /* Global Variables */
-:root {
-  --primary-color: #2c3e50;
-  --accent-color: #3498db;
-  --text-color: #333;
-  --light-bg: #f4f7f6;
-  --white: #ffffff;
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  --transition: all 0.3s ease;
-}
+@import 'shared.css';
+
+/* Local Overrides if needed */
+
 
 /* Reset and Base Styles */
 * {
@@ -311,83 +306,6 @@ body {
   background-color: var(--accent-color);
   color: var(--white);
   transform: translateY(-3px);
-}
-
-/* Footer */
-.site-footer {
-  background-color: #1a252f;
-  color: white;
-  padding: 60px 20px 20px;
-}
-
-.footer-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 40px;
-  max-width: 1200px;
-  margin: 0 auto 40px;
-}
-
-.footer-logo h2 {
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-.footer-logo span {
-  color: var(--accent-color);
-}
-
-.footer-links ul {
-  list-style: none;
-}
-
-.footer-links li {
-  margin-bottom: 10px;
-}
-
-.footer-links a {
-  color: #bdc3c7;
-  text-decoration: none;
-  transition: var(--transition);
-}
-
-.footer-links a:hover {
-  color: var(--white);
-  padding-left: 5px;
-}
-
-.social-icons {
-  display: flex;
-  gap: 15px;
-  margin-top: 15px;
-}
-
-.social-icon {
-  width: 40px;
-  height: 40px;
-  background-color: rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  color: var(--white);
-  text-decoration: none;
-  transition: var(--transition);
-  font-weight: bold;
-  font-size: 0.8rem;
-}
-
-.social-icon:hover {
-  background-color: var(--accent-color);
-  transform: rotate(360deg);
-}
-
-.footer-bottom {
-  text-align: center;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  color: #7f8c8d;
-  font-size: 0.9rem;
 }
 
 /* Animations */
