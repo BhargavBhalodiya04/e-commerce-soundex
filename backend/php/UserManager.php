@@ -15,10 +15,10 @@ class UserManager
     {
         try {
             // Store password in plain text as requested
-            $hashedPassword = $password;
+
 
             $stmt = $this->pdo->prepare("INSERT INTO users (username, email, password, first_name, last_name, phone, address, role) VALUES (?, ?, ?, ?, ?, ?, ?, 'user')");
-            $result = $stmt->execute([$username, $email, $hashedPassword, $firstName, $lastName, $phone, $address]);
+            $result = $stmt->execute([$username, $email, $password, $firstName, $lastName, $phone, $address]);
 
             if ($result) {
                 return ['success' => true, 'message' => 'User registered successfully', 'user_id' => $this->pdo->lastInsertId()];
