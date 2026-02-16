@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`username`, `email`, `password`, `first_name`, `last_name`, `role`, `is_active`) VALUES
-('admin', 'admin@soundex.com', '$2y$10$ugO6n3uOfcW6EWhW1qCzB.09xNzajsynAKH593i2PqWlKMkP.fTrG', 'Admin', 'User', 'admin', 1);
+('admin', 'admin@soundex.com', 'admin123', 'Admin', 'User', 'admin', 1),
+('user', 'user@soundex.com', 'user123', 'Regular', 'User', 'user', 1);
 
 -- --------------------------------------------------------
 

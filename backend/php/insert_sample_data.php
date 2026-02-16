@@ -45,7 +45,7 @@ try {
     $checkStmt->execute();
 
     if ($checkStmt->fetchColumn() == 0) {
-        $adminPassword = password_hash('admin123', PASSWORD_DEFAULT);
+        $adminPassword = 'admin123';
         $stmt = $pdo->prepare("INSERT INTO users (username, email, password, first_name, last_name, role, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute(['admin', 'admin@soundex.com', $adminPassword, 'Admin', 'User', 'admin', true]);
         echo "Admin user created successfully! (Username: admin, Password: admin123)\n";
