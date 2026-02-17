@@ -234,6 +234,65 @@ if (!isset($_SESSION['user_id'])) {
             background: #2980b9;
         }
 
+        /* Remove Button Styles */
+        .remove-item-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 5px 0;
+            margin-top: 5px;
+            display: inline-block;
+            transition: color 0.3s;
+        }
+
+        .remove-item-btn:hover {
+            color: #c0392b;
+            text-decoration: underline;
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Quantity Control Styles */
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .qty-btn {
+            background: #eee;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            transition: all 0.2s;
+        }
+
+        .qty-btn:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        .qty-value {
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             .checkout-container {
                 grid-template-columns: 1fr;
@@ -419,15 +478,64 @@ if (!isset($_SESSION['user_id'])) {
 
         // Generate HTML for cart items
         function generateCartItemsHTML(cart) {
-            return cart.map(item => `
+            return cart.map((item, index) => `
                 <div class="cart-item">
                     <div class="item-details">
                         <div class="item-name">${item.name}</div>
-                        <div class="item-quantity">Qty: ${item.quantity || 1}</div>
+                        <div class="quantity-controls">
+                            <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                            <span class="qty-value">${item.quantity || 1}</span>
+                            <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                        </div>
+                        <button class="remove-item-btn" onclick="removeFromCart(${index})">Remove</button>
                     </div>
-                    <div class="item-price">₹${item.price * (item.quantity || 1)}</div>
+                    <div class="item-price">₹${(item.price * (item.quantity || 1)).toLocaleString()}</div>
                 </div>
             `).join('');
+        }
+
+        // Update quantity
+        function updateQuantity(index, delta) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart[index]) {
+                let currentQty = cart[index].quantity || 1;
+                let newQty = currentQty + delta;
+                
+                if (newQty < 1) {
+                    removeFromCart(index);
+                    return;
+                }
+                
+                cart[index].quantity = newQty;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                
+                // Refresh content
+                loadCartItems();
+                
+                // Update header count
+                if (typeof updateCartCount === 'function') {
+                    updateCartCount();
+                }
+            }
+        }
+
+        // Remove item from cart
+        function removeFromCart(index) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const removedItem = cart[index];
+
+            if (confirm(`Are you sure you want to remove ${removedItem.name} from your cart?`)) {
+                cart.splice(index, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+
+                // Refresh the checkout page content
+                loadCartItems();
+
+                // Update global cart count if function exists (logic usually in header)
+                if (typeof updateCartCount === 'function') {
+                    updateCartCount();
+                }
+            }
         }
 
         // Calculate subtotal
@@ -550,8 +658,28 @@ if (!isset($_SESSION['user_id'])) {
             return isValid;
         }
 
+        // Update Header Cart Count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            const cartCountElement = document.getElementById('cartCount');
+            const cartIconElement = document.getElementById('cartIcon');
+
+            if (cartCountElement) {
+                cartCountElement.textContent = totalItems;
+                if (totalItems > 0) {
+                    cartIconElement.classList.remove('empty');
+                } else {
+                    cartIconElement.classList.add('empty');
+                }
+            }
+        }
+
         // Load cart when page loads
-        document.addEventListener('DOMContentLoaded', loadCartItems);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCartItems();
+            updateCartCount();
+        });
     </script>
 </body>
 
