@@ -83,7 +83,7 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
             <?php if (!empty($products)): ?>
                 <div class="products-grid">
                     <?php foreach ($products as $product): ?>
-                        <a href="../pages/buy.php" class="product-card">
+                        <a href="../pages/product_detail.php?id=<?php echo $product['id']; ?>" class="product-card">
                             <div class="product-image-wrapper">
                                 <img src="<?php echo htmlspecialchars($product['image_url'] ?? '/Bhavya/assets/images/product_gallery/1.jpg'); ?>"
                                     alt="<?php echo htmlspecialchars($product['name']); ?>"

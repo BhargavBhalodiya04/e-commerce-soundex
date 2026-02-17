@@ -300,6 +300,28 @@ CREATE TABLE IF NOT EXISTS `gallery_images` (
   KEY `product_id` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `gallery_images`
+--
+
+INSERT INTO `gallery_images` (`product_id`, `image_url`, `alt_text`, `sort_order`) VALUES
+(1, '../../assets/images/product_gallery/40.jpg', 'Gallery image for product 1', 1),
+(1, '../../assets/images/product_gallery/41.jpg', 'Gallery image for product 1', 2),
+(2, '../../assets/images/product_gallery/42.jpg', 'Gallery image for product 2', 1),
+(2, '../../assets/images/product_gallery/43.jpg', 'Gallery image for product 2', 2),
+(3, '../../assets/images/product_gallery/44.jpg', 'Gallery image for product 3', 1),
+(3, '../../assets/images/product_gallery/45.jpg', 'Gallery image for product 3', 2),
+(4, '../../assets/images/product_gallery/46.jpg', 'Gallery image for product 4', 1),
+(4, '../../assets/images/product_gallery/47.jpg', 'Gallery image for product 4', 2),
+(5, '../../assets/images/product_gallery/48.jpg', 'Gallery image for product 5', 1),
+(5, '../../assets/images/product_gallery/49.jpg', 'Gallery image for product 5', 2),
+(6, '../../assets/images/product_gallery/50.jpg', 'Gallery image for product 6', 1),
+(6, '../../assets/images/product_gallery/51.jpg', 'Gallery image for product 6', 2),
+(7, '../../assets/images/product_gallery/52.jpg', 'Gallery image for product 7', 1),
+(7, '../../assets/images/product_gallery/53.jpg', 'Gallery image for product 7', 2),
+(8, '../../assets/images/product_gallery/54.jpg', 'Gallery image for product 8', 1),
+(8, '../../assets/images/product_gallery/55.jpg', 'Gallery image for product 8', 2);
+
 -- --------------------------------------------------------
 
 --

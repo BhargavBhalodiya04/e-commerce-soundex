@@ -34,6 +34,18 @@ class ProductManager
         }
     }
 
+    // Get gallery images for a product
+    public function getGalleryImages($productId)
+    {
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM gallery_images WHERE product_id = ? ORDER BY sort_order ASC");
+            $stmt->execute([$productId]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+
     // Add product to cart (supports both logged-in users and guests)
     public function addToCart($userId, $sessionId, $productId, $quantity = 1)
     {

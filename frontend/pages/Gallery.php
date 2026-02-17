@@ -322,9 +322,9 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
                 <?php endif; ?>
               </div>
               <div class="product-actions">
-                <a href="product_detail.php" class="btn-action btn-view">View Details</a>
+                <a href="product_detail.php?id=<?php echo $product['id']; ?>" class="btn-action btn-view">View Details</a>
                 <button class="btn-action btn-cart"
-                  onclick="addToCartAndCheckout('<?php echo addslashes(htmlspecialchars($product['name'])); ?>', <?php echo $product['price'] ?? 0; ?>)">Buy
+                  onclick="addToCartAndCheckout('<?php echo addslashes(htmlspecialchars($product['name'])); ?>', <?php echo $product['price'] ?? 0; ?>, '<?php echo htmlspecialchars($product['image_url'] ?? '../../assets/images/product_gallery/1.jpg'); ?>')">Buy
                   Now</button>
               </div>
             </div>
@@ -434,7 +434,7 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
     };
 
     // Enhanced function to handle adding to cart and then proceeding to checkout
-    function addToCartAndCheckout(productName, price) {
+    function addToCartAndCheckout(productName, price, imageUrl) {
       // Check if user is logged in
       <?php if (!$isLoggedIn): ?>
         // Show login/signup prompt
@@ -444,7 +444,21 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
         return;
       <?php else: ?>
         // Add to cart and redirect to checkout
-        addToCart(productName, price);
+        // Get existing cart or create new one
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existingItemIndex = cart.findIndex(item => item.name === productName);
+
+        if (existingItemIndex > -1) {
+          cart[existingItemIndex].quantity += 1;
+        } else {
+          cart.push({
+            name: productName,
+            price: price,
+            image: imageUrl,
+            quantity: 1
+          });
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
         window.location.href = 'checkout.php';
       <?php endif; ?>
     }
