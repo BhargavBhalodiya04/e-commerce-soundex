@@ -1,0 +1,35 @@
+/* Footer Styles */
+footer {
+    background-color: #f8f9fa;
+    color: #333;
+    padding: 40px 0;
+    text-align: center;
+    border-top: 1px solid #eee;
+    margin-top: 50px;
+    width: 100%;
+}
+
+footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+footer p {
+    font-size: 0.95rem;
+    color: #666;
+    margin: 0;
+}
+
+/* Dark Mode Footer Support */
+@media (prefers-color-scheme: dark) {
+    footer {
+        background-color: #1a1a2e;
+        color: #ecf0f1;
+        border-top: 1px solid #2c3e50;
+    }
+    
+    footer p {
+        color: #bdc3c7;
+    }
+}

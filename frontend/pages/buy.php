@@ -26,44 +26,16 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <link rel="stylesheet" href="../css/shared.css">
     <link rel="stylesheet" href="../css/buy.css">
 </head>
 
 <body>
-    <!-- Fixed Navigation Header -->
-    <nav>
-        <ul>
-            <div class="logo"><a href="../pages/about.php">
-                    <h1>Soun<p>Dex</p>
-                    </h1>
-                </a></div>
-            <li><a href="../pages/home.php">Home</a></li>
-            <li><a href="../pages/Gallery.php">Gallery</a></li>
-            <li><a href="../pages/faqs.php">FAQs</a></li>
-            <li><a href="../pages/services.php">Services</a></li>
-            <li><a href="../pages/contact us.php">Contact</a></li>
-            <li><a href="../pages/about.php">About</a></li>
-            <?php if ($isLoggedIn): ?>
-                <li><a href="../pages/history.php">History</a></li>
-                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                    <li><a href="../admin/index.php" style="color: #f50057; font-weight: bold;">Admin Panel</a></li>
-                <?php endif; ?>
-                <li><a href="#" style="color: #0077cc; font-weight: bold;"><?php echo htmlspecialchars($username); ?></a>
-                </li>
-                <li><a href="../logout.php">Logout</a></li>
-            <?php else: ?>
-                <li><a href="../pages/login.php">Login</a></li>
-                <li><a href="../pages/signup.php">Sign Up</a></li>
-            <?php endif; ?>
-            <li><a href="../pages/checkout.php" class="cart-icon" id="cartIcon">
-                    🛒
-                    <span class="cart-count" id="cartCount">0</span>
-                </a></li>
-        </ul>
-    </nav>
-
+    <!-- Navigation Header -->
+    <?php include '../includes/header.php'; ?>
+    
     <!-- Main Content Container -->
     <main class="main-content">
         <header class="page-header">
@@ -96,9 +68,8 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
                                     Add to Cart
                                 </button>
                                 <button class="btn btn-buy buy-now-btn"
-                                    data-name="<?php echo htmlspecialchars($product['name']); ?>"
-                                    data-price="<?php echo $product['price']; ?>"
-                                    data-description="<?php echo htmlspecialchars($product['description'] ?? ''); ?>">
+                                    data-item-name="<?php echo htmlspecialchars($product['name']); ?>"
+                                    data-item-price="<?php echo $product['price']; ?>">
                                     Buy Now
                                 </button>
                             </div>
@@ -119,12 +90,11 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
                         <div class="product-actions">
                             <button class="btn btn-cart add-to-cart-btn" data-id="1" data-name="Bose SoundLink Micro"
                                 data-price="2999">Add to Cart</button>
-                            <button class="btn btn-buy buy-now-btn" data-name="Bose SoundLink Micro" data-price="2999">Buy
+                            <button class="btn btn-buy buy-now-btn" data-item-name="Bose SoundLink Micro" data-item-price="2999">Buy
                                 Now</button>
                         </div>
                     </div>
                 </div>
-                <!-- Repeat logic for other fallback items if desired, but DB is preferred -->
             <?php endif; ?>
         </div>
     </main>
@@ -171,26 +141,21 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
         // State for Buy Now
         let currentBuyItem = null;
 
-        // --- Event Listeners ---
-
         // Buy Now Buttons
         document.querySelectorAll('.buy-now-btn').forEach(button => {
             button.addEventListener('click', function () {
-                const name = this.getAttribute('data-name');
-                const price = this.getAttribute('data-price');
+                const name = this.getAttribute('data-item-name');
+                const price = this.getAttribute('data-item-price');
 
-                // Set modal content
                 modalProductName.textContent = name;
                 modalProductPrice.textContent = '₹' + parseInt(price).toLocaleString();
 
-                // Store current item data for checkout
                 currentBuyItem = {
                     name: name,
                     price: parseFloat(price),
                     quantity: 1
                 };
 
-                // Show modal
                 modal.style.display = 'block';
             });
         });
@@ -212,8 +177,8 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
         });
 
         // Modal Controls
-        closeBtn.onclick = closeModal;
-        cancelBtn.onclick = closeModal;
+        if(closeBtn) closeBtn.onclick = closeModal;
+        if(cancelBtn) cancelBtn.onclick = closeModal;
         window.onclick = function (event) {
             if (event.target == modal) {
                 closeModal();
@@ -221,67 +186,44 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
         }
 
         function closeModal() {
-            modal.style.display = 'none';
+            if(modal) modal.style.display = 'none';
         }
 
-        // Proceed to Checkout (Buy Now flow)
-        proceedBtn.addEventListener('click', function () {
+        // Proceed to Checkout
+        if(proceedBtn) proceedBtn.addEventListener('click', function () {
             <?php if (!$isLoggedIn): ?>
                 if (confirm('You need to login to proceed. Login now?')) {
                     window.location.href = 'login.php?redirect=' + encodeURIComponent(window.location.pathname);
                 }
             <?php else: ?>
                 if (currentBuyItem) {
-                    // Start fresh cart or just add to it? 
-                    // Usually "Buy Now" might clear cart or just add this item and go to checkout.
-                    // Let's add this item to cart and go to checkout for smoother flow.
                     addToCart(currentBuyItem);
                     window.location.href = 'checkout.php';
                 }
             <?php endif; ?>
         });
 
-        // --- Helper Functions ---
-
         function addToCart(product) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-            // Check if item already exists
             const existingItemIndex = cart.findIndex(item => item.name === product.name);
-
             if (existingItemIndex > -1) {
                 cart[existingItemIndex].quantity += 1;
             } else {
                 cart.push(product);
             }
-
             localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount();
-        }
-
-        function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-            const cartCountElement = document.getElementById('cartCount');
-            const cartIconElement = document.getElementById('cartIcon');
-
-            if (cartCountElement) {
-                cartCountElement.textContent = totalItems;
-                if (totalItems > 0) {
-                    cartIconElement.classList.remove('empty');
-                } else {
-                    cartIconElement.classList.add('empty');
-                }
+            if (typeof updateCartCount === 'function') {
+                updateCartCount();
             }
         }
 
         function showToast(message) {
+            if(!toast) return;
             toast.textContent = message;
             toast.className = "toast show";
             setTimeout(function () { toast.className = toast.className.replace("show", ""); }, 3000);
         }
-
-        // Init
-        document.addEventListener('DOMContentLoaded', updateCartCount);
     </script>
-</body></html>
+    <?php include '../includes/footer.php'; ?>
+</body>
+</html>

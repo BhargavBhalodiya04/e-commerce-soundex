@@ -10,13 +10,20 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Repair Services - Soundex</title>
-    <link rel="stylesheet" href="../CSS/header.css">
-    <link rel="stylesheet" href="../CSS/gallary.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <link rel="stylesheet" href="../css/shared.css">
     <style>
         .repair-section {
             padding: 40px 20px;
             text-align: center;
             background-color: #f5f5f5;
+            margin-top: 100px;
         }
 
         .repair-options {
@@ -45,6 +52,7 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
             cursor: pointer;
             font-size: 16px;
             margin-top: 10px;
+            font-weight: 600;
         }
 
         .book-btn:hover {
@@ -56,9 +64,14 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
             margin: 40px auto;
             text-align: left;
             background: white;
-            padding: 20px;
+            padding: 40px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .repair-process h2 {
+            margin-bottom: 20px;
+            color: #1a1a2e;
         }
 
         .repair-process ol {
@@ -66,44 +79,19 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
         }
 
         .repair-process li {
-            margin: 10px 0;
+            margin: 15px 0;
+            color: #444;
+            font-size: 1.1rem;
         }
     </style>
 </head>
 
 <body>
     <!-- Fixed Navigation Header -->
-    <nav>
-        <ul>
-            <div class="logo"><a href="../pages/about.php">
-                    <h1>Soun<p>Dex</p>
-                    </h1>
-                </a></div>
+    <?php include '../includes/header.php'; ?>
 
-            <li><a href="../pages/home.php">Home</a></li>
-            <li><a href="../pages/Gallery.php">Gallery</a></li>
-            <li><a href="../pages/faqs.php">FAQs</a></li>
-            <li><a href="../pages/services.php">Services</a></li>
-            <li><a href="../pages/contact us.php">Contact</a></li>
-            <li><a href="../pages/about.php">About</a></li>
-            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                <li><a href="../admin/index.php" style="color: #f50057; font-weight: bold;">Admin Panel</a></li>
-            <?php endif; ?>
-            <?php if ($isLoggedIn): ?>
-                <li><a href="#" style="color: #0077cc; font-weight: bold;"><?php echo htmlspecialchars($username); ?></a>
-                </li>
-                <li><a href="../logout.php">Logout</a></li>
-            <?php else: ?>
-                <li><a href="../pages/login.php">Login</a></li>
-                <li><a href="../pages/signup.php">Sign Up</a></li>
-            <?php endif; ?>
-
-        </ul>
-
-    </nav>
-
-    <!-- Main Content with Padding for Fixed Header -->
-    <main style="padding-top: 100px;">
+    <!-- Main Content -->
+    <main>
         <section class="repair-section">
             <h1>Live Repair Services</h1>
             <p>Book a live repair session with our expert technicians.</p>
@@ -141,6 +129,7 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
             </div>
         </section>
     </main>
+    <?php include '../includes/footer.php'; ?>
 </body>
 
 </html>

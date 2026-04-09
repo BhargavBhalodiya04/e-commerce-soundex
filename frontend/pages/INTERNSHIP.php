@@ -160,42 +160,20 @@ if ($_POST) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Internship Application - Soundex Audio Solutions</title>
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+  
   <link rel="stylesheet" href="../css/header.css" />
+  <link rel="stylesheet" href="../css/footer.css" />
   <link rel="stylesheet" href="../css/shared.css">
   <link rel="stylesheet" href="../css/internship.css">
 </head>
 
 <body>
   <!-- Navigation Header -->
-  <nav>
-    <ul>
-      <div class="logo"><a href="../pages/about.php">
-          <h1>Soun<p>Dex</p>
-          </h1>
-        </a></div>
-      <li><a href="../pages/home.php">Home</a></li>
-      <li><a href="../pages/Gallery.php">Gallery</a></li>
-      <li><a href="../pages/faqs.php">FAQs</a></li>
-      <li><a href="../pages/services.php">Services</a></li>
-      <li><a href="../pages/contact us.php">Contact</a></li>
-      <li><a href="../pages/about.php">About</a></li>
-      <!-- Admin Link is missing session logic in original file, added for consistency but relies on external session start or this file needs session_start() -->
-      <!-- Since this file didn't have session_start() at top but accessed SESSION implicitly in other files, added check -->
-      <!-- Wait, this file handles form submission but didn't have session_start(). Adding it. -->
-    </ul>
-  </nav>
-
-  <!-- Since shared header logic requires session, need to ensure session is started at top of file -->
-  <!-- Modifying top of file to include session_start() -->
+  <?php include '../includes/header.php'; ?>
 
   <main class="main-content">
     <section class="internship-section">
-      <div class="container">
+      <div class="container" style="margin-top: 50px;">
         <h1 class="section-title">Scholarship Eligibility Form</h1>
 
         <?php if ($message): ?>
@@ -206,85 +184,73 @@ if ($_POST) {
         <?php endif; ?>
 
         <form method="POST" enctype="multipart/form-data">
-          <label>Name</label>
-          <input type="text" name="name" value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>" required />
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>" required />
+          </div>
 
-          <label>E-mail</label>
-          <input type="email" name="email" value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" required />
-          <div id="emailError" class="error"></div>
+          <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" name="email" value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" required />
+            <div id="emailError" class="error"></div>
+          </div>
 
-          <label>Phone Number</label>
-          <input type="tel" name="phone" value="<?php echo htmlspecialchars($_POST['phone'] ?? ''); ?>" required />
-          <div id="phoneError" class="error"></div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" name="phone" value="<?php echo htmlspecialchars($_POST['phone'] ?? ''); ?>" required />
+            <div id="phoneError" class="error"></div>
+          </div>
 
-          <label>Address</label>
-          <textarea name="address" rows="3" required><?php echo htmlspecialchars($_POST['address'] ?? ''); ?></textarea>
+          <div class="form-group">
+            <label>Address</label>
+            <textarea name="address" rows="3" required><?php echo htmlspecialchars($_POST['address'] ?? ''); ?></textarea>
+          </div>
 
-          <label>Qualification</label>
-          <input type="text" name="qualification" value="<?php echo htmlspecialchars($_POST['qualification'] ?? ''); ?>"
-            required />
+          <div class="form-group">
+            <label>Qualification</label>
+            <input type="text" name="qualification" value="<?php echo htmlspecialchars($_POST['qualification'] ?? ''); ?>" required />
+          </div>
 
-          <label>Gender</label>
-          <select name="gender" required>
-            <option value="">--Select--</option>
-            <option value="Male" <?php echo (isset($_POST['gender']) && $_POST['gender'] === 'Male') ? 'selected' : ''; ?>>Male</option>
-            <option value="Female" <?php echo (isset($_POST['gender']) && $_POST['gender'] === 'Female') ? 'selected' : ''; ?>>Female</option>
-            <option value="Other" <?php echo (isset($_POST['gender']) && $_POST['gender'] === 'Other') ? 'selected' : ''; ?>>Other</option>
-          </select>
+          <div class="form-group">
+            <label>Gender</label>
+            <select name="gender" required>
+              <option value="">--Select--</option>
+              <option value="Male" <?php echo (isset($_POST['gender']) && $_POST['gender'] === 'Male') ? 'selected' : ''; ?>>Male</option>
+              <option value="Female" <?php echo (isset($_POST['gender']) && $_POST['gender'] === 'Female') ? 'selected' : ''; ?>>Female</option>
+              <option value="Other" <?php echo (isset($_POST['gender']) && $_POST['gender'] === 'Other') ? 'selected' : ''; ?>>Other</option>
+            </select>
+          </div>
 
-          <label>College / School</label>
-          <input type="text" name="school" value="<?php echo htmlspecialchars($_POST['school'] ?? ''); ?>" required />
+          <div class="form-group">
+            <label>College / School</label>
+            <input type="text" name="school" value="<?php echo htmlspecialchars($_POST['school'] ?? ''); ?>" required />
+          </div>
 
-          <label>Have you received any scholarship?</label>
-          <select name="scholarship" required>
-            <option value="">--Select--</option>
-            <option value="Yes" <?php echo (isset($_POST['scholarship']) && $_POST['scholarship'] === 'Yes') ? 'selected' : ''; ?>>Yes</option>
-            <option value="No" <?php echo (isset($_POST['scholarship']) && $_POST['scholarship'] === 'No') ? 'selected' : ''; ?>>No</option>
-          </select>
+          <div class="form-group">
+            <label>Have you received any scholarship?</label>
+            <select name="scholarship" required>
+              <option value="">--Select--</option>
+              <option value="Yes" <?php echo (isset($_POST['scholarship']) && $_POST['scholarship'] === 'Yes') ? 'selected' : ''; ?>>Yes</option>
+              <option value="No" <?php echo (isset($_POST['scholarship']) && $_POST['scholarship'] === 'No') ? 'selected' : ''; ?>>No</option>
+            </select>
+          </div>
 
-          <label>Describe Yourself</label>
-          <textarea name="description" rows="4"
-            required><?php echo htmlspecialchars($_POST['description'] ?? ''); ?></textarea>
+          <div class="form-group">
+            <label>Describe Yourself</label>
+            <textarea name="description" rows="4" required><?php echo htmlspecialchars($_POST['description'] ?? ''); ?></textarea>
+          </div>
 
-          <label>Upload Your Photos (Minimum 5)</label>
-          <input type="file" name="photos[]" multiple accept="image/*" required />
-          <div id="photoError" class="error"></div>
+          <div class="form-group">
+            <label>Upload Your Photos (Minimum 5)</label>
+            <input type="file" name="photos[]" multiple accept="image/*" required />
+            <div id="photoError" class="error"></div>
+          </div>
 
           <button type="submit">Submit Application</button>
         </form>
       </div>
     </section>
   </main>
-
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="footer-content">
-      <div class="footer-logo">
-        <h2>Soun<span>Dex</span></h2>
-        <p>Your one-stop shop for premium audio.</p>
-      </div>
-      <div class="footer-links">
-        <h3>Quick Links</h3>
-        <ul>
-          <li><a href="../pages/home.php">Home</a></li>
-          <li><a href="../pages/buy.php">Shop</a></li>
-          <li><a href="../pages/services.php">Services</a></li>
-          <li><a href="../pages/contact us.php">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-social">
-        <h3>Follow Us</h3>
-        <div class="social-icons">
-          <a href="#" class="social-icon">FB</a>
-          <a href="#" class="social-icon">IG</a>
-          <a href="#" class="social-icon">TW</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; <?php echo date('Y'); ?> Soundex Audio Solutions. All rights reserved.</p>
-    </div>
-  </footer>
 
   <script>
     document.querySelector("form").addEventListener("submit", function (e) {
@@ -295,25 +261,29 @@ if ($_POST) {
       const photos = photosInput.files;
 
       // Reset errors
-      document.getElementById("emailError").textContent = "";
-      document.getElementById("phoneError").textContent = "";
-      document.getElementById("photoError").textContent = "";
+      const emailError = document.getElementById("emailError");
+      const phoneError = document.getElementById("phoneError");
+      const photoError = document.getElementById("photoError");
+      
+      if(emailError) emailError.textContent = "";
+      if(phoneError) phoneError.textContent = "";
+      if(photoError) photoError.textContent = "";
 
       // Email validation
       if (!email.includes("@") || email.length < 5) {
-        document.getElementById("emailError").textContent = "Please enter a valid email.";
+        if(emailError) emailError.textContent = "Please enter a valid email.";
         valid = false;
       }
 
       // Phone validation
       if (phone.length !== 10 || isNaN(phone)) {
-        document.getElementById("phoneError").textContent = "Phone number must be exactly 10 digits.";
+        if(phoneError) phoneError.textContent = "Phone number must be exactly 10 digits.";
         valid = false;
       }
 
       // Photo validation
       if (photos.length < 5) {
-        document.getElementById("photoError").textContent = "Please upload at least 5 images.";
+        if(photoError) photoError.textContent = "Please upload at least 5 images.";
         valid = false;
       }
 
@@ -321,25 +291,8 @@ if ($_POST) {
         e.preventDefault();
       }
     });
-
-    // Cart Logic
-    function updateCartCount() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-      const cartCountElement = document.getElementById('cartCount');
-      const cartIconElement = document.getElementById('cartIcon');
-
-      if (cartCountElement) {
-        cartCountElement.textContent = totalItems;
-        if (totalItems > 0) {
-          cartIconElement.classList.remove('empty');
-        } else {
-          cartIconElement.classList.add('empty');
-        }
-      }
-    }
-    document.addEventListener('DOMContentLoaded', updateCartCount);
   </script>
+  <?php include '../includes/footer.php'; ?>
 </body>
 
 </html>

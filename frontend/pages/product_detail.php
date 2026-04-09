@@ -19,10 +19,6 @@ $galleryImages = $productManager->getGalleryImages($productId);
 
 // If no specific product was found, use a default product or redirect
 if (!$product) {
-  // Optionally redirect to home or show error
-  // header("Location: home.php");
-  // exit;
-
   // Using default data for display purposes if DB fails or ID invalid
   $product = [
     'id' => 1,
@@ -57,39 +53,14 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../css/header.css">
+  <link rel="stylesheet" href="../css/footer.css">
+  <link rel="stylesheet" href="../css/shared.css">
   <link rel="stylesheet" href="../css/product_detail.css">
 </head>
 
 <body>
   <!-- Navigation Header -->
-  <nav>
-    <ul>
-      <div class="logo"><a href="../pages/about.php">
-          <h1>Soun<p>Dex</p>
-          </h1>
-        </a></div>
-      <li><a href="../pages/home.php">Home</a></li>
-      <li><a href="../pages/Gallery.php">Gallery</a></li>
-      <li><a href="../pages/faqs.php">FAQs</a></li>
-      <li><a href="../pages/services.php">Services</a></li>
-      <li><a href="../pages/contact us.php">Contact</a></li>
-      <li><a href="../pages/about.php">About</a></li>
-      <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-        <li><a href="../admin/index.php" style="color: #f50057; font-weight: bold;">Admin Panel</a></li>
-      <?php endif; ?>
-      <?php if ($isLoggedIn): ?>
-        <li><a href="#" style="color: #0077cc; font-weight: bold;"><?php echo htmlspecialchars($username); ?></a></li>
-        <li><a href="../logout.php">Logout</a></li>
-      <?php else: ?>
-        <li><a href="../pages/login.php">Login</a></li>
-        <li><a href="../pages/signup.php">Sign Up</a></li>
-      <?php endif; ?>
-      <li><a href="../pages/checkout.php" class="cart-icon" id="cartIcon">
-          🛒
-          <span class="cart-count" id="cartCount">0</span>
-        </a></li>
-    </ul>
-  </nav>
+  <?php include '../includes/header.php'; ?>
 
   <main class="main-content">
     <div class="product-detail-container">
@@ -235,6 +206,7 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
     // Initialize
     document.addEventListener('DOMContentLoaded', updateCartCount);
   </script>
+  <?php include '../includes/footer.php'; ?>
 </body>
 
 </html>

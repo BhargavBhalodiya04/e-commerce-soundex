@@ -105,40 +105,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <title>Soundex Device Submission</title>
   <link rel="stylesheet" href="../css/header.css">
   <link rel="stylesheet" href="../css/sell.css">
+  <link rel="stylesheet" href="../css/footer.css">
 </head>
 
 <body>
   <!-- Navigation Header -->
-  <nav>
-    <ul>
-      <div class="logo"><a href="../pages/about.php">
-          <h1>Soun<p>Dex</p>
-          </h1>
-        </a></div>
-      <li><a href="../pages/home.php">Home</a></li>
-      <li><a href="../pages/Gallery.php">Gallery</a></li>
-      <li><a href="../pages/faqs.php">FAQs</a></li>
-      <li><a href="../pages/services.php">Services</a></li>
-      <li><a href="../pages/contact us.php">Contact</a></li>
-      <li><a href="../pages/about.php">About</a></li>
-      <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-        <li><a href="../admin/index.php" style="color: #f50057; font-weight: bold;">Admin Panel</a></li>
-      <?php endif; ?>
-      <?php if ($isLoggedIn): ?>
-        <li><a href="../pages/history.php">History</a></li>
-        <li><a href="#" style="color: #0077cc; font-weight: bold;"><?php echo htmlspecialchars($username); ?></a></li>
-        <li><a href="../logout.php">Logout</a></li>
-      <?php else: ?>
-        <li><a href="../pages/login.php">Login</a></li>
-        <li><a href="../pages/signup.php">Sign Up</a></li>
-      <?php endif; ?>
-      <li><a href="../pages/checkout.php" class="cart-icon" id="cartIcon">
-          🛒
-          <span class="cart-count" id="cartCount">0</span>
-        </a></li>
-    </ul>
-  </nav>
-
+  <?php include '../includes/header.php'; ?>
   <div class="container">
     <h2>Sell Your Device</h2>
     <p style="text-align: center; color: #666; margin-bottom: 30px;">Fill out the form below to get a quote for your
@@ -289,28 +261,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       });
     });
 
-    // Cart count update
-    function updateCartCount() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-      const cartCountElement = document.getElementById('cartCount');
-      const cartIconElement = document.getElementById('cartIcon');
-
-      if (cartCountElement) {
-        cartCountElement.textContent = totalItems;
-
-        // Add/remove empty class based on cart status
-        if (totalItems > 0) {
-          cartIconElement.classList.remove('empty');
-        } else {
-          cartIconElement.classList.add('empty');
-        }
-      }
-    }
-
-    // Update on load
-    document.addEventListener('DOMContentLoaded', updateCartCount);
+    // Cart count update handled by header.php
   </script>
+  <?php include '../includes/footer.php'; ?>
 </body>
 
 </html>

@@ -103,8 +103,9 @@ if ($_POST) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Repair Service - Soundex</title>
-    <link rel="stylesheet" href="../CSS/header.css">
-    <link rel="stylesheet" href="../CSS/gallary.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/gallary.css">
+    <link rel="stylesheet" href="../css/footer.css">
     <style>
         /* Reset and base styles */
         * {
@@ -315,17 +316,7 @@ if ($_POST) {
 </head>
 <body>
     <!-- Fixed Navigation Header -->
-    <nav>
-        <ul>
-            <div class="logo"><a href="../pages/about.php"><h1>Soun<p>Dex</p></h1></a></div>
-            <li><a href="../pages/home.php">Home</a></li>
-            <li><a href="../pages/Gallery.php">Gallery</a></li>
-            <li><a href="../pages/faqs.php">FAQs</a></li>
-            <li><a href="../pages/services.php">Services</a></li>
-            <li><a href="../pages/contact us.php">Contact</a></li>
-            <li><a href="../pages/about.php">About</a></li>
-        </ul>
-    </nav>
+    <?php include '../includes/header.php'; ?>
     
     <!-- Main Content Container -->
     <main style="padding-top: 100px;">
@@ -463,5 +454,6 @@ if ($_POST) {
             });
         });
     </script>
+    <?php include '../includes/footer.php'; ?>
 </body>
 </html>

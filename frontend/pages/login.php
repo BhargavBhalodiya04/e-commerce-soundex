@@ -54,16 +54,19 @@ if (isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Soundex</title>
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <link rel="stylesheet" href="../css/shared.css">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #50bbed;
-            font-family: 'Segoe UI', sans-serif;
-            height: 100vh;
+        .login-page-container {
+            padding-top: 100px;
+            padding-bottom: 50px;
+            min-height: calc(100vh - 140px);
             display: flex;
             align-items: center;
             justify-content: center;
+            background-color: #50bbed;
+            font-family: 'Poppins', sans-serif;
         }
 
         .login-container {
@@ -82,6 +85,7 @@ if (isset($_SESSION['user_id'])) {
             margin-bottom: 12px;
             border: 1px solid #ccc;
             border-radius: 6px;
+            box-sizing: border-box;
         }
 
         .submit-btn {
@@ -93,6 +97,7 @@ if (isset($_SESSION['user_id'])) {
             border-radius: 6px;
             cursor: pointer;
             transition: background-color 0.3s;
+            font-weight: 600;
         }
 
         .submit-btn:hover {
@@ -106,6 +111,7 @@ if (isset($_SESSION['user_id'])) {
         .signup a {
             color: #0077cc;
             text-decoration: none;
+            font-weight: 600;
         }
 
         .error-message {
@@ -128,22 +134,28 @@ if (isset($_SESSION['user_id'])) {
 </head>
 
 <body>
-    <div class="login-container">
-        <h2>Login to Soundex</h2>
-        <p>Access your account to continue shopping</p>
+    <?php include '../includes/header.php'; ?>
 
-        <?php if (!empty($message)): ?>
-            <div class="error-message"><?php echo htmlspecialchars($message); ?></div>
-        <?php endif; ?>
+    <div class="login-page-container">
+        <div class="login-container">
+            <h2>Login to Soundex</h2>
+            <p>Access your account to continue shopping</p>
 
-        <form method="POST" action="">
-            <input type="text" name="username" placeholder="Username" class="input-field" required><br>
-            <input type="password" name="password" placeholder="Password" class="input-field" required><br>
-            <input type="submit" value="Login" class="submit-btn"><br>
-        </form>
-        <br>
-        <div class="signup">Don't have an Account? <a href="signup.php">Sign up</a></div>
+            <?php if (!empty($message)): ?>
+                <div class="error-message"><?php echo htmlspecialchars($message); ?></div>
+            <?php endif; ?>
+
+            <form method="POST" action="">
+                <input type="text" name="username" placeholder="Username" class="input-field" required><br>
+                <input type="password" name="password" placeholder="Password" class="input-field" required><br>
+                <input type="submit" value="Login" class="submit-btn"><br>
+            </form>
+            <br>
+            <div class="signup">Don't have an Account? <a href="signup.php">Sign up</a></div>
+        </div>
     </div>
+
+    <?php include '../includes/footer.php'; ?>
 </body>
 
 </html>

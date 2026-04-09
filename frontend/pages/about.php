@@ -25,38 +25,12 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
   <link rel="stylesheet" href="../css/header.css" />
   <link rel="stylesheet" href="../css/shared.css">
   <link rel="stylesheet" href="../css/about.css">
+  <link rel="stylesheet" href="../css/footer.css" />
 </head>
 
 <body>
   <!-- Navigation Header -->
-  <nav>
-    <ul>
-      <div class="logo"><a href="../pages/about.php">
-          <h1>Soun<p>Dex</p>
-          </h1>
-        </a></div>
-      <li><a href="../pages/home.php">Home</a></li>
-      <li><a href="../pages/Gallery.php">Gallery</a></li>
-      <li><a href="../pages/faqs.php">FAQs</a></li>
-      <li><a href="../pages/services.php">Services</a></li>
-      <li><a href="../pages/contact us.php">Contact</a></li>
-      <li><a href="../pages/about.php" class="active">About</a></li>
-      <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-        <li><a href="../admin/index.php" style="color: #f50057; font-weight: bold;">Admin Panel</a></li>
-      <?php endif; ?>
-      <?php if ($isLoggedIn): ?>
-        <li><a href="#" style="color: #0077cc; font-weight: bold;"><?php echo htmlspecialchars($username); ?></a></li>
-        <li><a href="../logout.php">Logout</a></li>
-      <?php else: ?>
-        <li><a href="../pages/login.php">Login</a></li>
-        <li><a href="../pages/signup.php">Sign Up</a></li>
-      <?php endif; ?>
-      <li><a href="../pages/checkout.php" class="cart-icon" id="cartIcon">
-          🛒
-          <span class="cart-count" id="cartCount">0</span>
-        </a></li>
-    </ul>
-  </nav>
+  <?php include '../includes/header.php'; ?>
 
   <main class="main-content">
     <section class="about-us section-padding">
@@ -103,54 +77,7 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="footer-content">
-      <div class="footer-logo">
-        <h2>Soun<span>Dex</span></h2>
-        <p>Your one-stop shop for premium audio.</p>
-      </div>
-      <div class="footer-links">
-        <h3>Quick Links</h3>
-        <ul>
-          <li><a href="../pages/home.php">Home</a></li>
-          <li><a href="../pages/buy.php">Shop</a></li>
-          <li><a href="../pages/services.php">Services</a></li>
-          <li><a href="../pages/contact us.php">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-social">
-        <h3>Follow Us</h3>
-        <div class="social-icons">
-          <a href="#" class="social-icon">FB</a>
-          <a href="#" class="social-icon">IG</a>
-          <a href="#" class="social-icon">TW</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; <?php echo date('Y'); ?> Soundex Audio Solutions. All rights reserved.</p>
-    </div>
-  </footer>
-
-  <script>
-    function updateCartCount() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-      const cartCountElement = document.getElementById('cartCount');
-      const cartIconElement = document.getElementById('cartIcon');
-
-      if (cartCountElement) {
-        cartCountElement.textContent = totalItems;
-        if (totalItems > 0) {
-          cartIconElement.classList.remove('empty');
-        } else {
-          cartIconElement.classList.add('empty');
-        }
-      }
-    }
-    document.addEventListener('DOMContentLoaded', updateCartCount);
-  </script>
+  <?php include '../includes/footer.php'; ?>
 </body>
 
 </html>

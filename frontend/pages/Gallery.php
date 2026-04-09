@@ -23,8 +23,9 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Soundex Gallery - Premium Speakers & Audio Equipment</title>
-  <link rel="stylesheet" href="/Bhavya/frontend/css/gallary.css" />
-  <link rel="stylesheet" href="/Bhavya/frontend/css/header.css" />
+  <link rel="stylesheet" href="../css/gallary.css" />
+  <link rel="stylesheet" href="../css/header.css" />
+  <link rel="stylesheet" href="../css/footer.css" />
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -251,35 +252,7 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
 
 <body>
   <!-- Navigation Header -->
-  <nav>
-    <ul>
-      <div class="logo"><a href="/Bhavya/frontend/pages/about.php">
-          <h1>Soun<p>Dex</p>
-          </h1>
-        </a></div>
-      <li><a href="/Bhavya/frontend/pages/home.php">Home</a></li>
-      <li><a href="/Bhavya/frontend/pages/Gallery.php" class="active">Gallery</a></li>
-      <li><a href="/Bhavya/frontend/pages/faqs.php">FAQs</a></li>
-      <li><a href="/Bhavya/frontend/pages/services.php">Services</a></li>
-      <li><a href="/Bhavya/frontend/pages/contact%20us.php">Contact</a></li>
-      <li><a href="/Bhavya/frontend/pages/about.php">About</a></li>
-      <?php if ($isLoggedIn): ?>
-        <li><a href="/Bhavya/frontend/pages/history.php">History</a></li>
-        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-          <li><a href="/Bhavya/frontend/admin/index.php" style="color: #f50057; font-weight: bold;">Admin Panel</a></li>
-        <?php endif; ?>
-        <li><a href="#" style="color: #0077cc; font-weight: bold;"><?php echo htmlspecialchars($username); ?></a></li>
-        <li><a href="/Bhavya/frontend/logout.php">Logout</a></li>
-      <?php else: ?>
-        <li><a href="/Bhavya/frontend/pages/login.php">Login</a></li>
-        <li><a href="/Bhavya/frontend/pages/signup.php">Sign Up</a></li>
-      <?php endif; ?>
-      <li><a href="/Bhavya/frontend/pages/checkout.php" class="cart-icon" id="cartIcon">
-          🛒
-          <span class="cart-count" id="cartCount">0</span>
-        </a></li>
-    </ul>
-  </nav>
+  <?php include '../includes/header.php'; ?>
 
   <!-- Main Content -->
   <div class="main-content">
@@ -404,34 +377,7 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
       });
     });
 
-    // Update cart count on page load
-    function updateCartCount() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-      const cartCountElement = document.getElementById('cartCount');
-      const cartIconElement = document.getElementById('cartIcon');
-
-      if (cartCountElement) {
-        cartCountElement.textContent = totalItems;
-
-        // Add/remove empty class based on cart status
-        if (totalItems > 0) {
-          cartIconElement.classList.remove('empty');
-        } else {
-          cartIconElement.classList.add('empty');
-        }
-      }
-    }
-
-    // Update cart count initially and after any cart changes
-    updateCartCount();
-
-    // Override addToCart to also update the cart count display
-    const originalAddToCart = addToCart;
-    window.addToCart = function (productName, price) {
-      originalAddToCart(productName, price);
-      updateCartCount();
-    };
+    // Update cart count initially and after any cart changes (handled by header.php)
 
     // Enhanced function to handle adding to cart and then proceeding to checkout
     function addToCartAndCheckout(productName, price, imageUrl) {
@@ -463,6 +409,7 @@ $username = $isLoggedIn ? $_SESSION['username'] : '';
       <?php endif; ?>
     }
   </script>
+  <?php include '../includes/footer.php'; ?>
 </body>
 
 </html>

@@ -23,12 +23,12 @@ if ($_POST) {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $message = "Invalid email format.";
     } else {
-        // Attempt to register user using the correct method
+        // Attempt to register user
         $result = $userManager->registerUser($username, $email, $password);
         
         if ($result['success']) {
-            // Redirect to success page after successful registration
-            header("Location: ../index.php");
+            // Redirect to home page
+            header("Location: home.php");
             exit();
         } else {
             $message = $result['message'];
@@ -37,70 +37,102 @@ if ($_POST) {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Soundex Sign Up</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Soundex</title>
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <style>
+        .signup-page-container {
+            padding-top: 100px;
+            padding-bottom: 50px;
+            min-height: calc(100vh - 140px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #50bbed;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .signup-container {
+            width: 370px; 
+            padding: 25px; 
+            background-color: white; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); 
+            animation: fadeZoom 0.8s ease;
+            text-align: center;
+        }
+
+        .input-field {
+            width: 100%; 
+            padding: 10px; 
+            margin-bottom: 12px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px;
+        }
+
+        .submit-btn {
+            width: 100%; 
+            padding: 12px; 
+            background-color: #0077cc; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #005fa3;
+        }
+
+        .login-link {
+            margin-top: 15px;
+        }
+
+        .login-link a {
+            color: #0077cc;
+            text-decoration: none;
+        }
+
+        .error-message {
+            color: red;
+            margin-bottom: 10px;
+        }
+
+        @keyframes fadeZoom {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+    </style>
 </head>
-<body style="
-  margin: 0; 
-  padding: 0; 
-  background-color: #50bbed; 
-  font-family: 'Segoe UI', sans-serif; 
-  height: 100vh; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center;
-">
+<body>
+    <?php include '../includes/header.php'; ?>
 
-  <div style="
-    width: 370px; 
-    padding: 25px; 
-    background-color: white; 
-    border-radius: 12px; 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); 
-    animation: fadeZoom 0.8 ease;
-    text-align: center;">
+    <div class="signup-page-container">
+        <div class="signup-container">
+            <h2 style="margin-bottom: 20px; color: #0077cc;">Welcome to Soundex</h2>
+            <p>Where Every Beat Becomes Unforgettable</p>
+            
+            <?php if (!empty($message)): ?>
+                <div class="error-message"><?php echo htmlspecialchars($message); ?></div>
+            <?php endif; ?>
+            
+            <form method="POST" action="">
+                <input type="text" name="username" placeholder="Username" class="input-field" required>
+                <input type="email" name="email" placeholder="Email ID" class="input-field" required>
+                <input type="password" name="password" placeholder="Password" class="input-field" required>
+                <input type="password" name="confirm_password" placeholder="Confirm Password" class="input-field" required>
+                <button type="submit" class="submit-btn">Create Account</button>
+            </form>
+            <br>
+            <div class="login-link">Already have an account? <a href="login.php">Login here</a></div>
+        </div>
+    </div>
 
-    <h2 style="margin-bottom: 20px; color: #0077cc;">Welcome to Soundex</h2>
-    <p>Where Every Beat Becomes Unforgettable</p>
-    
-    <?php if (!empty($message)): ?>
-        <div style="color: red; margin-bottom: 10px;"><?php echo htmlspecialchars($message); ?></div>
-    <?php endif; ?>
-    
-    <form method="POST" action="">
-      <input type="text" name="username" placeholder="Username" 
-        style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px;" required><br>
-
-      <input type="email" name="email" placeholder="Email ID" 
-        style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px;" required><br>
-
-      <input type="password" name="password" placeholder="Password" 
-        style="width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px;" required><br>
-
-      <input type="password" name="confirm_password" placeholder="Confirm Password" 
-        style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 6px;" required><br>
-
-      <button type="submit" 
-        style="width: 100%; padding: 12px; background-color: #0077cc; color: white; border: none; border-radius: 6px; cursor: pointer;
-        transition: background-color 0.3s;">
-        Create Account
-      </button>
-    </form>
-    <br>
-    <a href="../index.php" style="color: #0077cc; text-decoration: none;">Already have an account? Login here</a>
-  </div>
-
-  <style>
-    @keyframes fadeZoom {
-      0% { opacity: 0; transform: scale(0.9); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    button:hover {
-      background-color: #005fa3;
-    }
-  </style>
-
+    <?php include '../includes/footer.php'; ?>
 </body>
 </html>

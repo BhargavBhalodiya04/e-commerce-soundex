@@ -17,20 +17,22 @@ if (!isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Soundex</title>
-    <link rel="stylesheet" href="../CSS/header.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <link rel="stylesheet" href="../css/shared.css">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: #f8f9fa;
             margin: 0;
             padding: 0;
-            padding-top: 80px;
         }
 
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            margin-top: 100px;
         }
 
         .page-title {
@@ -234,7 +236,6 @@ if (!isset($_SESSION['user_id'])) {
             background: #2980b9;
         }
 
-        /* Remove Button Styles */
         .remove-item-btn {
             background: none;
             border: none;
@@ -253,12 +254,6 @@ if (!isset($_SESSION['user_id'])) {
             text-decoration: underline;
         }
 
-        .item-actions {
-            display: flex;
-            align-items: center;
-        }
-
-        /* Quantity Control Styles */
         .quantity-controls {
             display: flex;
             align-items: center;
@@ -307,23 +302,7 @@ if (!isset($_SESSION['user_id'])) {
 
 <body>
     <!-- Navigation Header -->
-    <nav>
-        <ul>
-            <div class="logo"><a href="../pages/about.php">
-                    <h1>Soun<p>Dex</p>
-                    </h1>
-                </a></div>
-            <li><a href="../pages/home.php">Home</a></li>
-            <li><a href="../pages/Gallery.php">Gallery</a></li>
-            <li><a href="../pages/faqs.php">FAQs</a></li>
-            <li><a href="../pages/services.php">Services</a></li>
-            <li><a href="../pages/contact us.php">Contact</a></li>
-            <li><a href="../pages/about.php">About</a></li>
-            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                <li><a href="../admin/index.php" style="color: #f50057; font-weight: bold;">Admin Panel</a></li>
-            <?php endif; ?>
-        </ul>
-    </nav>
+    <?php include '../includes/header.php'; ?>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -339,8 +318,7 @@ if (!isset($_SESSION['user_id'])) {
                 <p>Add some products to your cart to checkout</p>
                 <a href="Gallery.php" class="back-to-shopping">Continue Shopping</a>
             </div>
-
-            <!-- Checkout form and order summary will be populated here -->
+            <!-- Population via JS -->
         </div>
     </div>
 
@@ -352,15 +330,14 @@ if (!isset($_SESSION['user_id'])) {
             const emptyCartMessage = document.getElementById('emptyCartMessage');
 
             if (cart.length === 0) {
-                // Show empty cart message
                 emptyCartMessage.style.display = 'block';
+                checkoutContainer.innerHTML = '';
+                checkoutContainer.appendChild(emptyCartMessage);
                 return;
             }
 
-            // Hide empty cart message
             emptyCartMessage.style.display = 'none';
 
-            // Create checkout layout
             checkoutContainer.innerHTML = `
                 <div class="checkout-form">
                     <div class="form-section">
@@ -412,15 +389,15 @@ if (!isset($_SESSION['user_id'])) {
                     <div class="form-section">
                         <h2>Payment Method</h2>
                         <div class="payment-methods">
-                            <div class="payment-option" onclick="selectPaymentMethod('credit')">
+                            <div class="payment-option" onclick="selectPaymentMethod('credit', event)">
                                 <input type="radio" name="payment" value="credit" id="creditCard">
                                 <label for="creditCard">Credit/Debit Card</label>
                             </div>
-                            <div class="payment-option" onclick="selectPaymentMethod('paypal')">
+                            <div class="payment-option" onclick="selectPaymentMethod('paypal', event)">
                                 <input type="radio" name="payment" value="paypal" id="paypal">
                                 <label for="paypal">PayPal</label>
                             </div>
-                            <div class="payment-option" onclick="selectPaymentMethod('cod')">
+                            <div class="payment-option" onclick="selectPaymentMethod('cod', event)">
                                 <input type="radio" name="payment" value="cod" id="cashOnDelivery">
                                 <label for="cashOnDelivery">Cash on Delivery</label>
                             </div>
@@ -456,20 +433,20 @@ if (!isset($_SESSION['user_id'])) {
                         <h2>Order Summary</h2>
                     </div>
                     <div class="cart-items" id="cartItemsList">
-                        ${generateCartItemsHTML(cart)}
+                        \${generateCartItemsHTML(cart)}
                     </div>
                     <div class="summary-totals">
                         <div class="total-row">
                             <span>Subtotal:</span>
-                            <span>₹${calculateSubtotal(cart)}</span>
+                            <span>₹\${calculateSubtotal(cart).toLocaleString()}</span>
                         </div>
                         <div class="total-row">
                             <span>Shipping:</span>
-                            <span>₹${cart.length > 0 ? '99' : '0'}</span>
+                            <span>₹\${cart.length > 0 ? '99' : '0'}</span>
                         </div>
                         <div class="total-row grand-total">
                             <span>Total:</span>
-                            <span>₹${calculateTotal(cart)}</span>
+                            <span>₹\${calculateTotal(cart).toLocaleString()}</span>
                         </div>
                     </div>
                 </div>
@@ -481,86 +458,68 @@ if (!isset($_SESSION['user_id'])) {
             return cart.map((item, index) => `
                 <div class="cart-item">
                     <div class="item-details">
-                        <div class="item-name">${item.name}</div>
+                        <div class="item-name">\${item.name}</div>
                         <div class="quantity-controls">
-                            <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
-                            <span class="qty-value">${item.quantity || 1}</span>
-                            <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                            <button class="qty-btn" onclick="updateQuantity(\${index}, -1)">-</button>
+                            <span class="qty-value">\${item.quantity || 1}</span>
+                            <button class="qty-btn" onclick="updateQuantity(\${index}, 1)">+</button>
                         </div>
-                        <button class="remove-item-btn" onclick="removeFromCart(${index})">Remove</button>
+                        <button class="remove-item-btn" onclick="removeFromCart(\${index})">Remove</button>
                     </div>
-                    <div class="item-price">₹${(item.price * (item.quantity || 1)).toLocaleString()}</div>
+                    <div class="item-price">₹\${(item.price * (item.quantity || 1)).toLocaleString()}</div>
                 </div>
             `).join('');
         }
 
-        // Update quantity
         function updateQuantity(index, delta) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             if (cart[index]) {
                 let currentQty = cart[index].quantity || 1;
                 let newQty = currentQty + delta;
-                
                 if (newQty < 1) {
                     removeFromCart(index);
                     return;
                 }
-                
                 cart[index].quantity = newQty;
                 localStorage.setItem('cart', JSON.stringify(cart));
-                
-                // Refresh content
                 loadCartItems();
-                
-                // Update header count
                 if (typeof updateCartCount === 'function') {
                     updateCartCount();
                 }
             }
         }
 
-        // Remove item from cart
         function removeFromCart(index) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             const removedItem = cart[index];
-
-            if (confirm(`Are you sure you want to remove ${removedItem.name} from your cart?`)) {
+            if (confirm(\`Are you sure you want to remove \${removedItem.name} from your cart?\`)) {
                 cart.splice(index, 1);
                 localStorage.setItem('cart', JSON.stringify(cart));
-
-                // Refresh the checkout page content
                 loadCartItems();
-
-                // Update global cart count if function exists (logic usually in header)
                 if (typeof updateCartCount === 'function') {
                     updateCartCount();
                 }
             }
         }
 
-        // Calculate subtotal
         function calculateSubtotal(cart) {
             return cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
         }
 
-        // Calculate total with shipping
         function calculateTotal(cart) {
             const subtotal = calculateSubtotal(cart);
             const shipping = cart.length > 0 ? 99 : 0;
             return subtotal + shipping;
         }
 
-        // Select payment method
-        function selectPaymentMethod(method) {
-            // Remove selected class from all options
+        function selectPaymentMethod(method, event) {
             document.querySelectorAll('.payment-option').forEach(option => {
                 option.classList.remove('selected');
             });
-
-            // Add selected class to clicked option
             event.currentTarget.classList.add('selected');
+            const radio = event.currentTarget.querySelector('input[type="radio"]');
+            if(radio) radio.checked = true;
 
-            // Show/hide card details based on selection
             const cardDetails = document.getElementById('cardDetails');
             if (method === 'credit') {
                 cardDetails.style.display = 'block';
@@ -569,9 +528,7 @@ if (!isset($_SESSION['user_id'])) {
             }
         }
 
-        // Place order function
         async function placeOrder() {
-            // Validate form
             if (!validateForm()) {
                 return;
             }
@@ -582,7 +539,6 @@ if (!isset($_SESSION['user_id'])) {
             placeOrderBtn.disabled = true;
 
             try {
-                // Collect data
                 const cart = JSON.parse(localStorage.getItem('cart')) || [];
                 const shipping = {
                     firstName: document.getElementById('firstName').value,
@@ -596,7 +552,6 @@ if (!isset($_SESSION['user_id'])) {
                 };
                 const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
 
-                // Send to backend
                 const response = await fetch('../../backend/php/place_order.php', {
                     method: 'POST',
                     headers: {
@@ -610,17 +565,15 @@ if (!isset($_SESSION['user_id'])) {
                 });
 
                 const result = await response.json();
-
                 if (result.success) {
                     alert('Order placed successfully! Order #' + result.order_number);
                     localStorage.removeItem('cart');
-                    window.location.href = 'history.php'; // Redirect to history page
+                    window.location.href = 'history.php';
                 } else {
                     alert('Failed to place order: ' + result.message);
                     placeOrderBtn.innerText = originalText;
                     placeOrderBtn.disabled = false;
                 }
-
             } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred while placing the order.');
@@ -629,11 +582,9 @@ if (!isset($_SESSION['user_id'])) {
             }
         }
 
-        // Validate form
         function validateForm() {
             const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'zipCode', 'country'];
             let isValid = true;
-
             requiredFields.forEach(fieldId => {
                 const field = document.getElementById(fieldId);
                 if (!field.value.trim()) {
@@ -643,44 +594,21 @@ if (!isset($_SESSION['user_id'])) {
                     field.style.borderColor = '#ddd';
                 }
             });
-
-            // Check if payment method is selected
             const paymentSelected = document.querySelector('input[name="payment"]:checked');
             if (!paymentSelected) {
                 alert('Please select a payment method');
                 isValid = false;
             }
-
             if (!isValid) {
                 alert('Please fill in all required fields');
             }
-
             return isValid;
         }
 
-        // Update Header Cart Count
-        function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-            const cartCountElement = document.getElementById('cartCount');
-            const cartIconElement = document.getElementById('cartIcon');
-
-            if (cartCountElement) {
-                cartCountElement.textContent = totalItems;
-                if (totalItems > 0) {
-                    cartIconElement.classList.remove('empty');
-                } else {
-                    cartIconElement.classList.add('empty');
-                }
-            }
-        }
-
-        // Load cart when page loads
         document.addEventListener('DOMContentLoaded', () => {
             loadCartItems();
-            updateCartCount();
         });
     </script>
+    <?php include '../includes/footer.php'; ?>
 </body>
-
 </html>
